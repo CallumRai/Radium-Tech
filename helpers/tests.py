@@ -5,7 +5,7 @@ import pandas as pd
 from helpers import data
 
 
-def CADFTest(symbol1, symbol2, start_date, end_date, key):
+def CADF_Test(symbol1, symbol2, start_date, end_date, key):
     """
     :param symbol1: First equity
     :param symbol2: Second equity
