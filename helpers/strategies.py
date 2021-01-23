@@ -1,0 +1,1 @@
+def hedge_ratio_two()

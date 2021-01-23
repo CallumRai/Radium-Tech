@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import requests
 
@@ -54,6 +54,35 @@ def adjusted_closed(symbol, start_date, end_date, key):
     adj_clo_df = full_df.loc[mask]
 
     # get column of interest only (as a dateframe)
-    adj_clo_df = adj_clo_df.iloc[:,4].to_frame()
+    adj_clo_df = adj_clo_df.iloc[:, 4].to_frame()
 
     return adj_clo_df
+
+
+def fill_missing_date(df):
+    """
+    :param df: Dataframe of a set of stocks
+    :return: Missing prices filled with previous
+    """
+
+    # get list of required dates
+    s_date = df.index[-1]
+    e_date = df.index[0]
+    days = list(pd.date_range(s_date, e_date))
+    days = [d.date() for d in days]
+
+    # initialise full dataframe
+    days_df = pd.DataFrame(index = days)
+    # augment dataset
+    full_df = pd.concat([days_df, df], axis=1)
+
+    # iterate through each possibly empty cell
+    for i in range(1, len(full_df.index)):
+        for j in range(len(full_df.columns)):
+            cell = full_df.iat[i, j]
+
+            # replace cell if empty
+            if pd.isna(cell):
+                full_df.iat[i, j] = full_df.iat[i - 1, j]
+
+    return full_df
