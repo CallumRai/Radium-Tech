@@ -2,7 +2,7 @@
 import statsmodels.tsa.stattools as ts
 import statsmodels.tsa.vector_ar.vecm as vm
 import pandas as pd
-from helpers import data
+import data
 
 
 def CADF_Test(symbol1, symbol2, start_date, end_date, key):
@@ -87,3 +87,6 @@ def johansen_test(symbol1, symbol2, start_date, end_date, key):
         print(f"\nr<={i} Eigenvalue Statistic = {eigen_stat[i]}")
         print(f"r<={i} Eigenvalue Critical Values: ")
         print(f"1%: {eigen_crit[i][0]}\n5%: {eigen_crit[i][1]}\n10% {eigen_crit[i][2]}")
+
+    # Return cointegration ratios
+    return result.evec[:, 0]
