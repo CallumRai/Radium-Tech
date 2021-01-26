@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
 import matplotlib.pyplot as plt
+import budget
 
 class BollingerPair():
     def __init__(self, pair, lookback, entry_z, exit_z):
@@ -17,10 +18,10 @@ class BollingerPair():
         self.entry_z = entry_z
         self.exit_z = exit_z
 
-    def theoretical_returns(self):
+    def get_optimal_positions(self):
         """
-        Calculate theoretical returns without any costs and budget restrictions
-        Store Cumulative Returns in self.cum_ret
+        Calculate the optimal share positions determined by the Bollinger Bands strategy
+        -- returns: optimal_positions (WRITE THE STRUCTURE OF RETURN OBJECT)
         """
 
         # Get pair spread using ols estimate of hedge ratio w/ lookback
@@ -66,14 +67,24 @@ class BollingerPair():
         hedge_ratio = self.pair.hedge_ols(self.lookback)
         share_allocation = ts.add_constant(-hedge_ratio)
 
+        # optimal positions detrmined by Bollinger Bands strategy
+        optimal_positions = units * share_allocation
+
+        return optimal_positions
+
+    def theoretical_returns(self):
+        """
+        Calculate theoretical returns without any costs and budget restrictions
+        Store Cumulative Returns in self.cum_ret
+        """
+        # Get the optimal positions determined by the strategy
+        optimal_positions = self.get_optimal_positions()
+
         # get closed prices
         df = pd.concat([self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
 
-        # calculate capital allocation by element wise mult
-        capital_allocation = share_allocation * df.values
-
-        # calculate positions w/ bollinger units
-        positions = units * capital_allocation
+        # calculate capital allocation to each position
+        positions = optimal_positions * df.values
 
         # convert to df
         positions = pd.DataFrame(positions, index=self.pair.equity1.data.index)
@@ -93,6 +104,46 @@ class BollingerPair():
 
         self.cum_ret = cum_ret
 
+    def calculate_returns(self):
+        """
+        -- Calculate returns taking into account commision fees and budget restrictions
+        -- Optimal Positions get rounded to 3 decimal places
+        -- Store Cumulative Returns in self.cum_ret
+        """
+        # Get the optimal positions determined by the strategy
+        optimal_positions = self.get_optimal_positions()
+
+        # Calculate integer positions determined by rounding optimal positions to 3 d.p.
+        rounded_positions = np.zeros(optimal_positions.shape)
+        for i in range(self.lookback, optimal_positions.shape[0] - 1):
+            rounded_positions[i, 0] = budget.truncate(optimal_positions[i, 0], 3) * 10**3
+            rounded_positions[i, 1] = budget.truncate(optimal_positions[i, 1], 3) * 10**3
+
+        # Get closed prices
+        prices = pd.concat([self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
+
+        # Calculate orders
+        equity1_orders = np.diff(rounded_positions[:, 0])
+        equity1_orders = np.append(equity1_orders, 0)
+        equity2_orders = np.diff(rounded_positions[:, 1])
+        equity2_orders = np.append(equity2_orders, 0)
+
+        # Calculate commissions per daily order (NEED TO ADD MINIMUM 0.35)
+        equity1_comm = np.abs(equity1_orders) * 0.0035
+        equity2_comm = np.abs(equity2_orders) * 0.0035
+
+        # Calculate market value of positions
+        equity_balance = np.multiply(np.abs(rounded_positions), prices)
+
+        #balance = np.zeros(optimal_positions.shape[0])
+        #for i in range(0, optimal_positions.shape[0] - 1):
+            #balance[i] = equity_balance.iloc[i, 0] + equity_balance.iloc[i, 1] - equity1_comm[i] - equity2_comm[i]
+        balance = equity_balance.assign(equity1_commissions = equity1_comm, equity2_commissions = equity2_comm)
+        print(balance)
+
+
+
+
     def plot_return(self):
         plt.plot(self.cum_ret)
         plt.show()
@@ -101,9 +152,9 @@ if __name__ == '__main__':
     import equity
     import pair
 
-    GDX = equity.Equity("GDX", "2020-01-01", "2021-01-01", "R25C111BKODO8RHT")
-    GLD = equity.Equity("GLD", "2020-01-01", "2021-01-01", "R25C111BKODO8RHT")
+    GDX = equity.Equity("GDX", "2020-01-01", "2021-01-01", "A6O7S12U02K5YZO7")
+    GLD = equity.Equity("GLD", "2020-01-01", "2021-01-01", "A6O7S12U02K5YZO7")
     port = pair.Pair(GDX, GLD)
     boll = BollingerPair(port, 30, 1, 0)
-    boll.theoretical_returns()
-    boll.plot_return()
+    boll.calculate_returns()
+    #boll.plot_return()
