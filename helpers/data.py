@@ -5,9 +5,9 @@ import requests
 
 def daily_df(symbol, key):
     """
-    :param symbol: Name of equity
+    :param symbol: Name of pair
     :param key: API key
-    :return: Dataframe of all daily stock signals
+    :return: Dataframe of all daily pair signals
     """
 
     # Get signals in JSON form
@@ -35,11 +35,11 @@ def daily_df(symbol, key):
 
 def adjusted_closed(symbol, start_date, end_date, key):
     """
-    :param symbol: Name of equity
+    :param symbol: Name of pair
     :param start_date: First date
     :param end_date: Last date
     :param key: Api key
-    :return: Dataframe of the daily adjusted closed price of an equity between two dates
+    :return: Dataframe of the daily adjusted closed price of an pair between two dates
     """
 
     # format dates
