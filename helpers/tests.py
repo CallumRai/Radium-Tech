@@ -7,8 +7,8 @@ import data
 
 def CADF_Test(symbol1, symbol2, start_date, end_date, key):
     """
-    :param symbol1: First pair
-    :param symbol2: Second pair
+    :param symbol1: First equity
+    :param symbol2: Second equity
     :param start_date: First date
     :param end_date: Last date
     :param key: API Key
@@ -45,8 +45,8 @@ def CADF_Test(symbol1, symbol2, start_date, end_date, key):
 
 def johansen_test(symbol1, symbol2, start_date, end_date, key):
     """
-    :param symbol1: First pair
-    :param symbol2: Second pair
+    :param symbol1: First equity
+    :param symbol2: Second equity
     :param start_date: First date
     :param end_date: Last date
     :param key: API Key

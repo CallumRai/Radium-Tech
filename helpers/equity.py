@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from helpers import data
+import data
 
 
 class Equity:
     def __init__(self, symbol, start_date, end_date, key):
         """
-        :param symbol: Symbol for pair
+        :param symbol: Symbol for equity
         :param start_date: First date of interest
         :param end_date: Last date of interest
         :param key: Alpha-Vantage API key
