@@ -128,13 +128,13 @@ class BollingerPair():
         equity2_orders = np.diff(rounded_positions[:, 1])
         equity2_orders = np.append(equity2_orders, 0)
 
-        # Calculate commissions per daily order (NEED TO ADD MINIMUM 0.35)
-        equity1_comm = np.abs(equity1_orders) * 0.0035
-        equity2_comm = np.abs(equity2_orders) * 0.0035
+        # Calculate commissions per daily order (minimum price of 0.35)
+        equity1_comm = np.array([max(abs(x)*0.0035, 0.35) if x != 0 else 0 for x in equity1_orders])
+        equity2_comm = np.array([max(abs(x)*0.0035, 0.35) if x != 0 else 0 for x in equity2_orders])
 
         # Calculate market value of positions
         equity_balance = np.multiply(np.abs(rounded_positions), prices)
-
+        print(equity_balance)
         #balance = np.zeros(optimal_positions.shape[0])
         #for i in range(0, optimal_positions.shape[0] - 1):
             #balance[i] = equity_balance.iloc[i, 0] + equity_balance.iloc[i, 1] - equity1_comm[i] - equity2_comm[i]
