@@ -1,7 +1,8 @@
-from ..strategy import Strategy
+from ..strategy import *
 import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
+
 
 class BollingerPair(Strategy):
     def __init__(self, pair, entry_z, exit_z, lookback):
@@ -11,7 +12,7 @@ class BollingerPair(Strategy):
         self.exit_z = exit_z
         self.lookback = lookback
 
-        self.positions = self.get_optimal_positions(self)
+        self.positions = self.get_optimal_positions()
 
     def get_optimal_positions(self):
         """

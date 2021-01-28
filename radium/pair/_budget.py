@@ -3,7 +3,7 @@ import numpy as np
 import math
 from ..helpers.truncate import truncate
 
-def budget(pair):
+def _budget(pair):
     """
     Args:
         pair: Pair of equities

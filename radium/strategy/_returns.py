@@ -1,7 +1,9 @@
 import numpy as np
-from ..helpers.truncate import truncate
+from ..helpers import *
+import pandas as pd
 
-def calculate_returns(strategy):
+
+def _returns(strategy):
     """
     Args:
         strategy: Strategy with positions
