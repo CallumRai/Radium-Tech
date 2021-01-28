@@ -3,7 +3,7 @@ import pandas as pd
 import statsmodels.formula.api as sm
 
 
-def hedge_ols(self, lookback):
+def _hedge_ols(self, lookback):
     """
     Args:
         self: Pair of equities

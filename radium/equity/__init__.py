@@ -2,7 +2,7 @@ from datetime import datetime
 from ._daily import *
 
 
-class Equity():
+class Equity:
     def __init__(self, symbol, start_date, end_date, key):
         """
         Args:
@@ -24,7 +24,7 @@ class Equity():
         # Initialise the data
 
         # Fetch all data
-        df = daily(self)
+        df = _daily(self)
 
         # get dates of interest only
         mask = (df.index >= start_date) & (df.index <= end_date)

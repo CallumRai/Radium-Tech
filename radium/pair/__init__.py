@@ -4,7 +4,7 @@ from .cadf_test import *
 from .johansen_test import *
 
 
-class Pair():
+class Pair:
     def __init__(self, equity1, equity2):
         """
         Pair of equities (note: first equity is used as response variable in ols regression)

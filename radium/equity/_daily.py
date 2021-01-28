@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 
 
-def daily(self):
+def _daily(self):
     """
     Args:
         self: an Equity

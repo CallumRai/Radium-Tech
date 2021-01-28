@@ -3,7 +3,7 @@ import pandas as pd
 import statsmodels.tsa.stattools as ts
 
 
-def spread_ols(self, lookback):
+def _spread_ols(self, lookback):
     """
     Args:
         self: Pair of equities

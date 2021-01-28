@@ -1,7 +1,7 @@
 import statsmodels.tsa.stattools as ts
 import pandas as pd
 
-
+x
 def CADF_Test(self):
     """
     Args:
