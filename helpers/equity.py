@@ -1,16 +1,10 @@
 from datetime import datetime
-
-import data
+from _daily.py import *
 
 
 class Equity:
     def __init__(self, symbol, start_date, end_date, key):
-        """
-        :param symbol: Symbol for equity
-        :param start_date: First date of interest
-        :param end_date: Last date of interest
-        :param key: Alpha-Vantage API key
-        """
+        "
 
         # convert dates from strings to date objects
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
@@ -20,8 +14,7 @@ class Equity:
         self.start_date = start_date
         self.end_date = end_date
 
-        # Initialise the data
-
+        # Initialise the data ...
         # Fetch all data
         df = data.daily_df(symbol, key)
 
