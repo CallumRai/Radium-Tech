@@ -40,3 +40,4 @@ class Equity:
         self.low = df["3. low"]
         self.open = df["1. open"]
         self.closed = df["5. adjusted close"]
+z

@@ -4,6 +4,7 @@ import statsmodels.tsa.stattools as ts
 import matplotlib.pyplot as plt
 import budget
 
+
 class BollingerPair():
     def __init__(self, pair, lookback, entry_z, exit_z):
         """
@@ -92,8 +93,8 @@ class BollingerPair():
 
         # calculate profit and loss with % change of close price and positions
         close_pct_change = df.pct_change().values
-        pnl = np.sum((positions.shift().values)*close_pct_change, axis=1)
-
+        pnl = np.sum((positions.shift().values) * close_pct_change, axis=1)
+        print(pnl)
         # calculate return
         total_position = np.sum(np.abs(positions.shift()), axis=1)
         ret = pnl / total_position
@@ -116,11 +117,12 @@ class BollingerPair():
         # Calculate integer positions determined by rounding optimal positions to 3 d.p.
         rounded_positions = np.zeros(optimal_positions.shape)
         for i in range(self.lookback, optimal_positions.shape[0] - 1):
-            rounded_positions[i, 0] = budget.truncate(optimal_positions[i, 0], 3) * 10**3
-            rounded_positions[i, 1] = budget.truncate(optimal_positions[i, 1], 3) * 10**3
+            rounded_positions[i, 0] = budget.truncate(optimal_positions[i, 0], 3) * 10 ** 3
+            rounded_positions[i, 1] = budget.truncate(optimal_positions[i, 1], 3) * 10 ** 3
 
         # Get closed prices
         prices = pd.concat([self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
+        prices.columns = [self.pair.equity1.symbol, self.pair.equity2.symbol]
 
         # Calculate orders
         equity1_orders = np.diff(rounded_positions[:, 0])
@@ -129,24 +131,17 @@ class BollingerPair():
         equity2_orders = np.append(equity2_orders, 0)
 
         # Calculate commissions per daily order (minimum price of 0.35)
-        equity1_comm = np.array([max(abs(x)*0.0035, 0.35) if x != 0 else 0 for x in equity1_orders])
-        equity2_comm = np.array([max(abs(x)*0.0035, 0.35) if x != 0 else 0 for x in equity2_orders])
+        equity1_comm = np.array([max(abs(x) * 0.0035, 0.35) if x != 0 else 0 for x in equity1_orders])
+        equity2_comm = np.array([max(abs(x) * 0.0035, 0.35) if x != 0 else 0 for x in equity2_orders])
 
-        # Calculate market value of positions
-        equity_balance = np.multiply(np.abs(rounded_positions), prices)
-        print(equity_balance)
-        #balance = np.zeros(optimal_positions.shape[0])
-        #for i in range(0, optimal_positions.shape[0] - 1):
-            #balance[i] = equity_balance.iloc[i, 0] + equity_balance.iloc[i, 1] - equity1_comm[i] - equity2_comm[i]
-        balance = equity_balance.assign(equity1_commissions = equity1_comm, equity2_commissions = equity2_comm)
-        print(balance)
-
-
-
+        # Get balance
+        equity1_balance = equity1_orders * prices.iloc[:,0].values
+        equity2_balance = equity2_orders * prices.iloc[:,1].values
 
     def plot_return(self):
         plt.plot(self.cum_ret)
         plt.show()
+
 
 if __name__ == '__main__':
     import equity
@@ -156,5 +151,6 @@ if __name__ == '__main__':
     GLD = equity.Equity("GLD", "2020-01-01", "2021-01-01", "A6O7S12U02K5YZO7")
     port = pair.Pair(GDX, GLD)
     boll = BollingerPair(port, 30, 1, 0)
-    boll.calculate_returns()
-    #boll.plot_return()
+    a = boll.calculate_returns()
+    a.to_csv("osdfosdf.csv")
+    # boll.plot_return()
