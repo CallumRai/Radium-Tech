@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
-
+from ._hedge_ols import _hedge_ols
 
 def _spread_ols(pair, lookback):
     """
@@ -17,7 +17,7 @@ def _spread_ols(pair, lookback):
     df = pd.concat([pair.equity1.closed, pair.equity2.closed], axis=1)
     df.columns = [pair.equity1.symbol, pair.equity2.symbol]
 
-    hedge_ratio = pair.hedge_ols(lookback)
+    hedge_ratio = _hedge_ols(pair, lookback)
     # create matrix of 1s and -h to element-wise multiply with close data for spread (y = y1 - hy2)
     hedge_matrix = ts.add_constant(-hedge_ratio)
     # multiply and add for each date
