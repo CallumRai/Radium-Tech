@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
 import matplotlib.pyplot as plt
-import budget
+from budget import truncate
 
 class BollingerPair():
     def __init__(self, pair, lookback, entry_z, exit_z):
@@ -103,6 +103,7 @@ class BollingerPair():
         cum_ret.fillna(method='ffill', inplace=True)
 
         self.cum_ret = cum_ret
+        print('APR = %f Sharpe = %f' % (np.prod(1+ret)**(252/len(ret))-1, np.sqrt(252)*np.mean(ret)/np.std(ret)))
 
     def calculate_returns(self):
         """
@@ -116,30 +117,33 @@ class BollingerPair():
         # Calculate integer positions determined by rounding optimal positions to 3 d.p.
         rounded_positions = np.zeros(optimal_positions.shape)
         for i in range(self.lookback, optimal_positions.shape[0] - 1):
-            rounded_positions[i, 0] = budget.truncate(optimal_positions[i, 0], 3) * 10**3
-            rounded_positions[i, 1] = budget.truncate(optimal_positions[i, 1], 3) * 10**3
+            rounded_positions[i, 0] = truncate(optimal_positions[i, 0], 3) * 10**3
+            rounded_positions[i, 1] = truncate(optimal_positions[i, 1], 3) * 10**3
 
         # Get closed prices
         prices = pd.concat([self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
 
         # Calculate orders
         equity1_orders = np.diff(rounded_positions[:, 0])
-        equity1_orders = np.append(equity1_orders, 0)
+        equity1_orders = np.append(0, equity1_orders)
         equity2_orders = np.diff(rounded_positions[:, 1])
-        equity2_orders = np.append(equity2_orders, 0)
+        equity2_orders = np.append(0, equity2_orders)
 
         # Calculate commissions per daily order (NEED TO ADD MINIMUM 0.35)
         equity1_comm = np.abs(equity1_orders) * 0.0035
         equity2_comm = np.abs(equity2_orders) * 0.0035
 
-        # Calculate market value of positions
-        equity_balance = np.multiply(np.abs(rounded_positions), prices)
+        # Calculate Initial Budget, equal to buy 1000 units of each equity
+        init_budget = 1000 * (self.pair.equity1.closed.iloc[0] + self.pair.equity2.closed.iloc[0])
+        # Truncate to 2 d.p.
+        budget = truncate(init_budget, 2)
 
-        #balance = np.zeros(optimal_positions.shape[0])
-        #for i in range(0, optimal_positions.shape[0] - 1):
-            #balance[i] = equity_balance.iloc[i, 0] + equity_balance.iloc[i, 1] - equity1_comm[i] - equity2_comm[i]
-        balance = equity_balance.assign(equity1_commissions = equity1_comm, equity2_commissions = equity2_comm)
-        print(balance)
+        # Calculate returns from Equity 1 and Equity 2
+        for i in range(0, len(equity1_orders) - 1):
+            budget += -1 * equity1_orders[i] * self.pair.equity1.closed.iloc[i] - equity1_comm[i]
+            budget += -1 * equity2_orders[i] * self.pair.equity2.closed.iloc[i] - equity2_comm[i]
+
+        print(budget/init_budget - 1)
 
 
 
@@ -157,4 +161,5 @@ if __name__ == '__main__':
     port = pair.Pair(GDX, GLD)
     boll = BollingerPair(port, 30, 1, 0)
     boll.calculate_returns()
-    #boll.plot_return()
+#    boll.theoretical_returns()
+#    boll.plot_return()
