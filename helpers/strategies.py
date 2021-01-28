@@ -129,9 +129,10 @@ class BollingerPair():
         equity2_orders = np.diff(rounded_positions[:, 1])
         equity2_orders = np.append(0, equity2_orders)
 
-        # Calculate commissions per daily order (NEED TO ADD MINIMUM 0.35)
-        equity1_comm = np.abs(equity1_orders) * 0.0035
-        equity2_comm = np.abs(equity2_orders) * 0.0035
+        # Calculate commissions per daily order (minimum price of 0.35)
+        equity1_comm = np.array([max(abs(x)*0.0035, 0.35) if x != 0 else 0 for x in equity1_orders])
+        equity2_comm = np.array([max(abs(x)*0.0035, 0.35) if x != 0 else 0 for x in equity2_orders])
+
 
         # Calculate Initial Budget, equal to buy 1000 units of each equity
         init_budget = 1000 * (self.pair.equity1.closed.iloc[0] + self.pair.equity2.closed.iloc[0])
