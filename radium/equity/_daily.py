@@ -2,16 +2,16 @@ import pandas as pd
 import requests
 
 
-def _daily(self):
+def _daily(equity):
     """
     Args:
-        self: an Equity
+        equity: an Equity
 
     Returns: Dataframe of all available daily signals
 
     """
     # Get signals in JSON form
-    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.symbol}&apikey={self.key}" \
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={equity.symbol}&apikey={equity.key}" \
           f"&outputsize=full"
     json = requests.get(url).json()
 

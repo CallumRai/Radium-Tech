@@ -76,7 +76,7 @@ class BollingerPair():
     def theoretical_returns(self):
         """
         Calculate theoretical returns without any costs and budget restrictions
-        Store Cumulative Returns in self.cum_ret
+        Store Cumulative Returns in pair.cum_ret
         """
         # Get the optimal positions determined by the strategy
         optimal_positions = self.get_optimal_positions()
@@ -109,7 +109,7 @@ class BollingerPair():
         """
         -- Calculate returns taking into account commision fees and budget restrictions
         -- Optimal Positions get rounded to 3 decimal places
-        -- Store Cumulative Returns in self.cum_ret
+        -- Store Cumulative Returns in pair.cum_ret
         """
         # Get the optimal positions determined by the strategy
         optimal_positions = self.get_optimal_positions()

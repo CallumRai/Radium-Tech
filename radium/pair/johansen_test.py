@@ -1,22 +1,22 @@
 import statsmodels.tsa.vector_ar.vecm as vm
 import pandas as pd
 
-def johansen_test(self):
+def johansen_test(pair):
     """
     Args:
-        self: Pair
+        pair: Pair
 
     Returns: Prints information from a Johansen test
 
     """
 
     # Get closed prices in dataframe
-    equity1_df = self.equity1.closed
-    equity2_df = self.equity2.closed
+    equity1_df = pair.equity1.closed
+    equity2_df = pair.equity2.closed
 
     # Set column name as symbol
-    equity1_df = equity1_df.rename(columns={"5. adjusted close": self.equity1.symbol})
-    equity2_df = equity2_df.rename(columns={"5. adjusted close": self.equity2.symbol})
+    equity1_df = equity1_df.rename(columns={"5. adjusted close": pair.equity1.symbol})
+    equity2_df = equity2_df.rename(columns={"5. adjusted close": pair.equity2.symbol})
 
     # Augment dataframes, removing missing data
     df = pd.concat([equity1_df, equity2_df], axis=1, join="inner")
@@ -35,8 +35,8 @@ def johansen_test(self):
     eigen_crit = [[round(x, 3) for x in y] for y in eigen_crit]
 
     # Print results
-    print(f"Johansen Test for cointegration between {self.equity1.symbol} and {self.equity2.symbol} from"
-          f" {self.start_date} to {self.end_date}")
+    print(f"Johansen Test for cointegration between {pair.equity1.symbol} and {pair.equity2.symbol} from"
+          f" {pair.start_date} to {pair.end_date}")
     for i in [0,1]:
         print(f"\nr<={i} Trace Statistic = {trace_stat[i]}")
         print(f"r<={i} Trace Critical Values:")
