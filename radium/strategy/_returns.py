@@ -1,4 +1,5 @@
 import numpy as np
+from ..helpers.truncate import truncate
 
 def calculate_returns(strategy):
     """
@@ -14,8 +15,8 @@ def calculate_returns(strategy):
     # Calculate integer positions determined by rounding optimal positions to 3 d.p.
     rounded_positions = np.zeros(optimal_positions.shape)
     for i in range(strategy.lookback, optimal_positions.shape[0] - 1):
-        rounded_positions[i, 0] = budget.truncate(optimal_positions[i, 0], 3) * 10 ** 3
-        rounded_positions[i, 1] = budget.truncate(optimal_positions[i, 1], 3) * 10 ** 3
+        rounded_positions[i, 0] = truncate(optimal_positions[i, 0], 3) * 10 ** 3
+        rounded_positions[i, 1] = truncate(optimal_positions[i, 1], 3) * 10 ** 3
 
     # Get closed prices
     prices = pd.concat([strategy.pair.equity1.closed, strategy.pair.equity2.closed], axis=1)
