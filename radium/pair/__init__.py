@@ -12,6 +12,7 @@ class Pair:
             equity1: First equity in pair
             equity2: Second equity in pair
         """
+
         self.equity1 = equity1
         self.equity2 = equity2
         self.start_date = equity1.start_date
