@@ -1,7 +1,10 @@
+import sys
+sys.path.append("..")
+
 from .johansen_test import *
 import numpy as np
 import math
-from ..helpers.truncate import truncate
+from helpers.truncate import truncate
 
 def _budget(pair):
     """
