@@ -1,4 +1,4 @@
-from ._returns import _returns
+from .returns import returns
 
 class Strategy:
     def __init__(self, pair):

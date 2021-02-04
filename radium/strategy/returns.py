@@ -3,7 +3,7 @@ from ..helpers import *
 import pandas as pd
 
 
-def _returns(strategy):
+def returns(strategy):
     """
     Args:
         strategy: Strategy with positions

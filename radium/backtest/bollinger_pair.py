@@ -2,7 +2,7 @@ from ..strategy import *
 import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
-from ..pair import _spread_ols, _hedge_ols
+from ..pair import spread_ols, hedge_ols
 
 
 class BollingerPair(Strategy):
@@ -22,7 +22,7 @@ class BollingerPair(Strategy):
         """
 
         # Get pair spread using ols estimate of hedge ratio w/ lookback
-        spread = _spread_ols(self.pair, self.lookback)
+        spread = spread_ols(self.pair, self.lookback)
 
         # Calculate Z-score
         spread_mean = spread.rolling(self.lookback).mean()
@@ -61,7 +61,7 @@ class BollingerPair(Strategy):
         units = np.tile(units, [1, 2])
 
         # get hedges and format as a matrix of 1s and -h for share allocation
-        hedge_ratio = _hedge_ols(self.pair, self.lookback)
+        hedge_ratio = hedge_ols(self.pair, self.lookback)
         share_allocation = ts.add_constant(-hedge_ratio)
 
         # optimal positions detrmined by Bollinger Bands strategy

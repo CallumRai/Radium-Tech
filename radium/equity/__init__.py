@@ -1,5 +1,5 @@
 from datetime import datetime
-from ._daily import _daily
+from .daily import daily
 
 class Equity:
     def __init__(self, symbol, start_date, end_date, key):
@@ -23,7 +23,7 @@ class Equity:
         # Initialise the data
 
         # Fetch all data
-        df = _daily(self)
+        df = daily(self)
 
         # get dates of interest only
         mask = (df.index >= start_date) & (df.index <= end_date)
