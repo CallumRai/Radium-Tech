@@ -15,8 +15,8 @@ def CADF_Test(pair):
     equity2_df = pair.equity2.closed
 
     # Set column name as symbol
-    equity1_df = equity1_df.rename(pair.equity1.symbol)
-    equity2_df = equity2_df.rename(pair.equity2.symbol)
+    equity1_df = equity1_df.rename(columns={"5. adjusted close": pair.equity1.symbol})
+    equity2_df = equity2_df.rename(columns={"5. adjusted close": pair.equity2.symbol})
 
     # Augment dataframes, removing missing data
     df = pd.concat([equity1_df, equity2_df], axis=1, join="inner")

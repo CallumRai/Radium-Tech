@@ -1,12 +1,8 @@
-import sys
-sys.path.append("..")
-from strategy import *
-from equity import *
-from pair import *
+from ..strategy import *
 import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
-from pair import _spread_ols, _hedge_ols
+from ..pair import _spread_ols, _hedge_ols
 
 
 class BollingerPair(Strategy):
@@ -72,11 +68,3 @@ class BollingerPair(Strategy):
         optimal_positions = units * share_allocation
 
         return optimal_positions
-
-
-if __name__ == '__main__':
-    Visa = Equity('V', '2015-01-01', '2021-01-01', 'A6O7S12U02K5YZO7')
-    Mastercard = Equity('MA', '2015-01-01', '2021-01-01', 'A6O7S12U02K5YZO7')
-    V_MA = Pair(Visa, Mastercard)
-    #CADF_Test(V_MA)
-    #johansen_test(V_MA)
