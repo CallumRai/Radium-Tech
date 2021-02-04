@@ -21,8 +21,6 @@ class Equity:
         self.end_date = end_date
         self.key = key
 
-        # Initialise the data
-
         # Fetch all data
         df = daily(self)
 
