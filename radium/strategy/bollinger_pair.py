@@ -1,8 +1,7 @@
-from radium.strategy import *
+from .strategy import Strategy
 import numpy as np
-import pandas as pd
 import statsmodels.tsa.stattools as ts
-from radium.pair import *
+import pandas as pd
 
 
 class BollingerPair(Strategy):
@@ -13,16 +12,14 @@ class BollingerPair(Strategy):
         self.exit_z = exit_z
         self.lookback = lookback
 
-        self.positions = self.get_optimal_positions()
-
-    def get_optimal_positions(self):
+    def positions(self):
         """
         Calculate the optimal share positions determined by the Bollinger Bands strategy
         -- returns: optimal_positions (WRITE THE STRUCTURE OF RETURN OBJECT)
         """
 
         # Get pair spread using ols estimate of hedge ratio w/ lookback
-        spread = spread_ols(self.pair, self.lookback)
+        spread = self.pair.spread_ols(self.lookback)
 
         # Calculate Z-score
         spread_mean = spread.rolling(self.lookback).mean()
@@ -61,7 +58,7 @@ class BollingerPair(Strategy):
         units = np.tile(units, [1, 2])
 
         # get hedges and format as a matrix of 1s and -h for share allocation
-        hedge_ratio = hedge_ols(self.pair, self.lookback)
+        hedge_ratio = self.pair.hedge_ols(self.lookback)
         share_allocation = ts.add_constant(-hedge_ratio)
 
         # optimal positions detrmined by Bollinger Bands strategy
