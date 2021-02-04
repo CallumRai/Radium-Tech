@@ -1,6 +1,7 @@
 from datetime import datetime
 from .daily import daily
 
+
 class Equity:
     def __init__(self, symbol, start_date, end_date, key):
         """
