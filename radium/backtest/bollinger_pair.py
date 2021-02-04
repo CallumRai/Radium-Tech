@@ -1,8 +1,8 @@
-from ..strategy import *
+from radium.strategy import *
 import numpy as np
 import pandas as pd
 import statsmodels.tsa.stattools as ts
-from ..pair import spread_ols, hedge_ols
+from radium.pair import *
 
 
 class BollingerPair(Strategy):

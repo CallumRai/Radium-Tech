@@ -1,5 +1,5 @@
 import numpy as np
-from ..helpers import *
+from radium.helpers import *
 import pandas as pd
 
 
@@ -22,18 +22,25 @@ def returns(strategy):
 
     # Get closed prices
     prices = pd.concat([strategy.pair.equity1.closed, strategy.pair.equity2.closed], axis=1)
-    prices.columns = [strategy.pair.equity1.symbol, strategy.pair.equity2.symbol]
 
     # Calculate orders
     equity1_orders = np.diff(rounded_positions[:, 0])
-    equity1_orders = np.append(equity1_orders, 0)
+    equity1_orders = np.append(0, equity1_orders)
     equity2_orders = np.diff(rounded_positions[:, 1])
-    equity2_orders = np.append(equity2_orders, 0)
+    equity2_orders = np.append(0, equity2_orders)
 
     # Calculate commissions per daily order (minimum price of 0.35)
     equity1_comm = np.array([max(abs(x) * 0.0035, 0.35) if x != 0 else 0 for x in equity1_orders])
     equity2_comm = np.array([max(abs(x) * 0.0035, 0.35) if x != 0 else 0 for x in equity2_orders])
 
-    # Get balance
-    equity1_balance = equity1_orders * prices.iloc[:, 0].values
-    equity2_balance = equity2_orders * prices.iloc[:, 1].values
+    # Calculate Initial Budget, equal to buy 1000 units of each equity
+    init_budget = 1000 * (strategy.pair.equity1.closed.iloc[0] + strategy.pair.equity2.closed.iloc[0])
+    # Truncate to 2 d.p.
+    budget = truncate(init_budget, 2)
+
+    # Calculate returns from Equity 1 and Equity 2
+    for i in range(0, len(equity1_orders) - 1):
+        budget += -1 * equity1_orders[i] * strategy.pair.equity1.closed.iloc[i] - equity1_comm[i]
+        budget += -1 * equity2_orders[i] * strategy.pair.equity2.closed.iloc[i] - equity2_comm[i]
+
+    print(budget / init_budget - 1)

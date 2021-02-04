@@ -1,7 +1,7 @@
 from .johansen_test import *
 import numpy as np
 import math
-from ..helpers.truncate import truncate
+from radium.helpers import *
 
 def budget(pair):
     """
