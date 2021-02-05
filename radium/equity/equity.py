@@ -1,7 +1,7 @@
 from datetime import datetime
 from .daily import daily
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Cursor
+import matplotlib.ticker as ticker
 
 
 class Equity:
@@ -54,8 +54,13 @@ class Equity:
         # If no start/end date specified use default
         if start_date is None:
             start_date = self.start_date
+        else:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+
         if end_date is None:
             end_date = self.end_date
+        else:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
         # Raises error if date range invalid
         if end_date <= start_date:
@@ -66,6 +71,16 @@ class Equity:
         mask = (closed.index >= start_date) & (closed.index <= end_date)
         closed = closed.loc[mask]
 
-        plt.plot(closed)
-        plt.ylabel("Adjusted closed prices")
+        fig, ax = plt.subplots()
+        ax.plot(closed)
+
+        plt.title(f"{self.symbol} from {start_date} to {end_date}")
+        plt.xlabel("Date")
+        plt.ylabel("Adjusted closed prices ($)")
+
+        # Put dollar marks infront of y axis
+        formatter = ticker.FormatStrFormatter('$%1.2f')
+        ax.yaxis.set_major_formatter(formatter)
+
+        plt.grid()
         plt.show()
