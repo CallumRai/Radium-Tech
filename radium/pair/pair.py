@@ -3,7 +3,9 @@ import statsmodels.formula.api as sm
 from .johansen_test import *
 import numpy as np
 from radium.helpers import *
-
+from datetime import datetime
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 class Pair:
     def __init__(self, equity1, equity2):
@@ -90,3 +92,51 @@ class Pair:
         budget_1dp = equity1_price * ratios_1dp[0] * 10 + equity2_price * ratios_1dp[1] * 10
 
         return [budget_1dp, budget_2dp, budget_3dp, budget_4dp]
+
+    def plot(self, start_date=None, end_date=None):
+        """
+        Args:
+            start_date: First date to plot (defaults to self val)
+            end_date: Last date to plot (defaults to self val)
+
+        Returns: Plot of adjusted closed prices
+
+        """
+        # If no start/end date specified use default
+        if start_date is None:
+            start_date = self.start_date
+        else:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+
+        if end_date is None:
+            end_date = self.end_date
+        else:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+        # Raises error if date range invalid
+        if end_date <= start_date:
+            raise Exception("End date same as or before start date")
+
+        # Gets required range only for both equities
+        equity1_closed = self.equity1.closed
+        mask = (equity1_closed.index >= start_date) & (equity1_closed.index <= end_date)
+        equity1_closed = equity1_closed.loc[mask]
+
+        equity2_closed = self.equity1.closed
+        mask = (equity2_closed.index >= start_date) & (equity2_closed.index <= end_date)
+        equity2_closed = equity2_closed.loc[mask]
+
+        fig, ax = plt.subplots()
+        ax.plot(equity1_closed)
+        ax.plot(equity2_closed)
+
+        plt.title(f"{self.symbol} from {start_date} to {end_date}")
+        plt.xlabel("Date")
+        plt.ylabel("Adjusted closed prices ($)")
+
+        # Put dollar marks infront of y axis
+        formatter = ticker.FormatStrFormatter('$%1.2f')
+        ax.yaxis.set_major_formatter(formatter)
+
+        plt.grid()
+        plt.show()
