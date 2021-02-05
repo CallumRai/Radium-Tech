@@ -5,7 +5,7 @@ import requests
 def daily(equity):
     """
     Args:
-        equity: an Equity
+        equity
 
     Returns: Dataframe of all available daily signals
 

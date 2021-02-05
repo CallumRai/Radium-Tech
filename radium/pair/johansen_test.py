@@ -4,9 +4,9 @@ import pandas as pd
 def johansen_test(pair):
     """
     Args:
-        pair: Pair
+        pair
 
-    Returns: Prints information from a Johansen test
+    Returns: Prints information from a Johansen test, returns cointegration ratios
 
     """
 

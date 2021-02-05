@@ -67,7 +67,6 @@ class Pair:
 
     def budget(self):
         """
-
         Returns: Budget to different decimal places
 
         """

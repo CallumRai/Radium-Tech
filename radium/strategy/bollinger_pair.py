@@ -14,8 +14,8 @@ class BollingerPair(Strategy):
 
     def positions(self):
         """
-        Calculate the optimal share positions determined by the Bollinger Bands strategy
-        -- returns: optimal_positions (WRITE THE STRUCTURE OF RETURN OBJECT)
+        Returns: the optimal share positions determined by the Bollinger Bands strategy
+
         """
 
         # Get pair spread using ols estimate of hedge ratio w/ lookback

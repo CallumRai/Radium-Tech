@@ -4,7 +4,7 @@ import pandas as pd
 def CADF_Test(pair):
     """
     Args:
-        pair: Pair
+        pair
 
     Returns: Prints information from a CADF test
 
