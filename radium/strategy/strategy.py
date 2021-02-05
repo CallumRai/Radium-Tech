@@ -77,11 +77,18 @@ class Strategy:
         total_position = np.sum(np.abs(positions.shift()), axis=1)
         ret = pnl / total_position
 
+        return ret
+
+    def cum_returns(self):
+        """
+        Returns: Cumulative Returns
+
+        """
+        ret = self.th_returns()
+
         # calculate cumulative return (add 1 for cumprod)
         cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
         cum_ret.fillna(method='ffill', inplace=True)
 
-        self.cum_ret = cum_ret
-        print(
-            'APR = %f Sharpe = %f' % (
-                np.prod(1 + ret) ** (252 / len(ret)) - 1, np.sqrt(252) * np.mean(ret) / np.std(ret)))
+        return cum_ret
+
