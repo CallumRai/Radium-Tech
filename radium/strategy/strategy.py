@@ -93,13 +93,29 @@ class Strategy:
 
         return cum_ret
 
-    def sharpe_ratio(self):
+    def sharpe(self):
         """
         Returns: Sharpe ratio
 
         """
         ret = self.th_returns()
-
-        sharpe_ratio = np.sqrt(252)*np.mean(ret)/np.std(ret)
-
+        sharpe_ratio = np.sqrt(252) * np.mean(ret) / np.std(ret)
         return sharpe_ratio
+
+    def MDD(self):
+        """
+        Returns: Maximum drawdown
+
+        """
+        ret = self.th_returns()
+        max_drawdown = (np.min(ret) - np.max(ret)) / np.max(ret)
+        return max_drawdown
+
+    def MDD_duration(self):
+        """
+        Returns: Maximum drawdown duration in days
+
+        """
+        ret = self.th_returns()
+        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
+        return max_drawdown_days
