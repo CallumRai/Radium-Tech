@@ -122,15 +122,15 @@ class Pair:
         mask = (equity1_closed.index >= start_date) & (equity1_closed.index <= end_date)
         equity1_closed = equity1_closed.loc[mask]
 
-        equity2_closed = self.equity1.closed
+        equity2_closed = self.equity2.closed
         mask = (equity2_closed.index >= start_date) & (equity2_closed.index <= end_date)
         equity2_closed = equity2_closed.loc[mask]
 
         fig, ax = plt.subplots()
-        ax.plot(equity1_closed)
-        ax.plot(equity2_closed)
+        plt.plot(equity1_closed, label = self.equity1.symbol)
+        plt.plot(equity2_closed, label = self.equity2.symbol)
 
-        plt.title(f"{self.symbol} from {start_date} to {end_date}")
+        plt.title(f"{self.equity1.symbol} and {self.equity2.symbol} from {start_date} to {end_date}")
         plt.xlabel("Date")
         plt.ylabel("Adjusted closed prices ($)")
 
@@ -138,5 +138,6 @@ class Pair:
         formatter = ticker.FormatStrFormatter('$%1.2f')
         ax.yaxis.set_major_formatter(formatter)
 
+        plt.legend()
         plt.grid()
         plt.show()
