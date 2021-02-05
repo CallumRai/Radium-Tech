@@ -8,7 +8,7 @@ class Strategy:
         """
         Args:
             pair
-            
+
         """
 
         self.pair = pair
@@ -61,21 +61,21 @@ class Strategy:
         # Get the optimal positions determined by the strategy
         optimal_positions = self.positions()
 
-        # get closed prices
+        # Get closed prices
         df = pd.concat([self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
 
-        # calculate capital allocation to each position
+        # Calculate capital allocation to each position
         positions = optimal_positions * df.values
 
-        # convert to df
+        # Convert to df
         positions = pd.DataFrame(positions, index=self.pair.equity1.data.index)
         positions.columns = [self.pair.equity1.symbol, self.pair.equity2.symbol]
 
-        # calculate profit and loss with % change of close price and positions
+        # Calculate profit and loss with % change of close price and positions
         close_pct_change = df.pct_change().values
         pnl = np.sum((positions.shift().values) * close_pct_change, axis=1)
 
-        # calculate return
+        # Calculate return
         total_position = np.sum(np.abs(positions.shift()), axis=1)
         ret = pnl / total_position
 
@@ -87,8 +87,6 @@ class Strategy:
 
         """
         ret = self.th_returns()
-
-        # calculate cumulative return (add 1 for cumprod)
         cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
         cum_ret.fillna(method='ffill', inplace=True)
 

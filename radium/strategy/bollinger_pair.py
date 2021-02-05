@@ -54,14 +54,14 @@ class BollingerPair(Strategy):
 
         units = units_short.values + units_long.values
 
-        # convert units into a n * 2 matrix (due to pair of equities)
+        # Convert units into a n * 2 matrix (due to pair of equities)
         units = np.tile(units, [1, 2])
 
-        # get hedges and format as a matrix of 1s and -h for share allocation
+        # Get hedges and format as a matrix of 1s and -h for share allocation
         hedge_ratio = self.pair.hedge_ols(self.lookback)
         share_allocation = ts.add_constant(-hedge_ratio)
 
-        # optimal positions detrmined by Bollinger Bands strategy
+        # Optimal share positions determined by the Bollinger Bands strategy
         optimal_positions = units * share_allocation
 
         return optimal_positions
