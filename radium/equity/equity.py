@@ -1,5 +1,6 @@
 from datetime import datetime
 from .daily import daily
+import matplotlib.pyplot as plt
 
 
 class Equity:
@@ -39,3 +40,8 @@ class Equity:
         self.low = df["3. low"]
         self.open = df["1. open"]
         self.closed = df["5. adjusted close"]
+
+    def plot_closed(self):
+        plt.plot(self.closed)
+        plt.ylabel("Adjusted closed prices")
+        plt.show()
