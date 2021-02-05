@@ -1,6 +1,7 @@
 from datetime import datetime
 from .daily import daily
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Cursor
 
 
 class Equity:
@@ -41,7 +42,30 @@ class Equity:
         self.open = df["1. open"]
         self.closed = df["5. adjusted close"]
 
-    def plot_closed(self):
-        plt.plot(self.closed)
+    def plot(self, start_date=None, end_date=None):
+        """
+        Args:
+            start_date: First date to plot (defaults to self val)
+            end_date: Last date to plot (defaults to self val)
+
+        Returns: Plot of adjusted closed prices
+
+        """
+        # If no start/end date specified use default
+        if start_date is None:
+            start_date = self.start_date
+        if end_date is None:
+            end_date = self.end_date
+
+        # Raises error if date range invalid
+        if end_date <= start_date:
+            raise Exception("End date same as or before start date")
+
+        # Gets required range only
+        closed = self.closed
+        mask = (closed.index >= start_date) & (closed.index <= end_date)
+        closed = closed.loc[mask]
+
+        plt.plot(closed)
         plt.ylabel("Adjusted closed prices")
         plt.show()
