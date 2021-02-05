@@ -53,9 +53,10 @@ class Strategy:
 
     def th_returns(self):
         """
-        Calculate theoretical returns without any costs and budget restrictions
-        Store Cumulative Returns in strategy.cum_ret
+        Returns: theoretical returns without any costs and budget restrictions
+
         """
+
         # Get the optimal positions determined by the strategy
         optimal_positions = self.positions()
 
@@ -92,3 +93,13 @@ class Strategy:
 
         return cum_ret
 
+    def sharpe_ratio(self):
+        """
+        Returns: Sharpe ratio
+
+        """
+        ret = self.th_returns()
+
+        sharpe_ratio = np.sqrt(252)*np.mean(ret)/np.std(ret)
+
+        return sharpe_ratio
