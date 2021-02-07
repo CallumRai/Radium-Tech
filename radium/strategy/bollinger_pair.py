@@ -2,8 +2,6 @@ from .strategy import Strategy
 import numpy as np
 import statsmodels.tsa.stattools as ts
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 
 class BollingerPair(Strategy):
