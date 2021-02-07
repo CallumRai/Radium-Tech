@@ -59,7 +59,7 @@ class Pair:
         df = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
         df.columns = [self.equity1.symbol, self.equity2.symbol]
 
-        hedge_ratio = self.hedge_ols(self, lookback)
+        hedge_ratio = self.hedge_ols(lookback)
         # create matrix of 1s and -h to element-wise multiply with close data for spread (y = y1 - hy2)
         hedge_matrix = ts.add_constant(-hedge_ratio)
         # multiply and add for each date

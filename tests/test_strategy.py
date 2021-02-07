@@ -9,7 +9,8 @@ class TestBollingerPair(unittest.TestCase):
         visa = Equity('V', '2015-01-01', '2021-01-01', 'A6O7S12U02K5YZO7')
         mastercard = Equity('MA', '2015-01-01', '2021-01-01', 'A6O7S12U02K5YZO7')
         v_ma = Pair(visa, mastercard)
-        BollingerPair(v_ma, 1, 0, 20)
+        v_ma_boll = BollingerPair(v_ma, 1, 0, 20)
+        v_ma_boll.plot()
 
     def test_default(self):
         """

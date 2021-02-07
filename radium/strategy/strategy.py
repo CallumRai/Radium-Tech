@@ -73,7 +73,7 @@ class Strategy:
 
         # Calculate profit and loss with % change of close price and positions
         close_pct_change = df.pct_change().values
-        pnl = np.sum((positions.shift().values) * close_pct_change, axis=1)
+        pnl = np.sum(positions.shift().values * close_pct_change, axis=1)
 
         # Calculate return
         total_position = np.sum(np.abs(positions.shift()), axis=1)
@@ -91,6 +91,23 @@ class Strategy:
         cum_ret.fillna(method='ffill', inplace=True)
 
         return cum_ret
+
+    def ann_returns(self):
+        """
+        Returns: Annualised returns
+
+        """
+        start_date = self.pair.start_date
+        end_date = self.pair.end_date
+
+        days = (end_date - start_date).days
+        days = int(days)
+
+        cum_returns = self.cum_returns()
+        final_cum = cum_returns[-1]
+
+        ann_return = (1 + final_cum) ** (365 / days) - 1
+        return ann_return
 
     def sharpe(self):
         """
