@@ -39,3 +39,4 @@ def CADF_Test(pair):
     print(f"1% Critical Value: {crit_value[0]}")
     print(f"5% Critical Value: {crit_value[1]}")
     print(f"10% Critical Value: {crit_value[2]}")
+    print("\n")

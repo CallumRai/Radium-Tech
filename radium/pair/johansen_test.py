@@ -49,5 +49,7 @@ def johansen_test(pair):
         print(f"r<={i} Eigenvalue Critical Values: ")
         print(f"1%: {eigen_crit[i][0]}\n5%: {eigen_crit[i][1]}\n10% {eigen_crit[i][2]}")
 
+    print("\n")
+
     # Return cointegration ratios
     return result.evec[:, 0]
