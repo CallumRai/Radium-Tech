@@ -4,7 +4,7 @@
 
 ## Main Features
 
-In current version 0.0.0 Radium-Tech can:
+In current version Radium-Tech can:
 - Plot price data for multiple equities.
 - Regress hedge ratios and price spread for a pair of equities.
 - Conduct tests for cointegration on pairs of equities.
