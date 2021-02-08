@@ -22,7 +22,7 @@ copyright = '2021, Ivan Erlic and Callum Rai'
 author = 'Ivan Erlic and Callum Rai'
 
 # The full version, including alpha/beta/rc tags
-release = '(Pre-release)'
+release = '0.0.0'
 
 
 # -- General configuration ---------------------------------------------------
