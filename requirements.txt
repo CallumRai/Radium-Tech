@@ -2,5 +2,4 @@ numpy
 pandas
 matplotlib
 statsmodels
-datetime
 requests
