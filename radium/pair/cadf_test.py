@@ -3,10 +3,12 @@ import pandas as pd
 
 def CADF_Test(pair):
     """
-    Args:
-        pair
+    Conducts a CADF test on a pair of equities and prints t-statistic, p-value and critical values
 
-    Returns: Prints information from a CADF test
+    Args:
+        pair: Pair of Equities to test
+
+    Returns: None
 
     """
 

@@ -6,6 +6,15 @@ import pandas as pd
 
 class BollingerPair(Strategy):
     def __init__(self, pair, entry_z, exit_z, lookback):
+        """
+        Bollinger band strategy on a pair of equities
+
+        Args:
+            pair: Pair to backtest strategy on
+            entry_z: Z-value to buy units
+            exit_z: Z-value to sell units
+            lookback: Number of signals to lookback on when regressing (for spread/hedge ratios)
+        """
         super().__init__(pair)
 
         self.entry_z = entry_z
@@ -14,8 +23,9 @@ class BollingerPair(Strategy):
 
     def positions(self):
         """
-        Returns: the optimal share positions determined by the Bollinger Bands strategy
+        Calculates optimum positions
 
+        Returns: Positions as a 2D array
         """
 
         # Get pair spread using ols estimate of hedge ratio w/ lookback

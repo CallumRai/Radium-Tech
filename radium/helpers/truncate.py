@@ -1,13 +1,15 @@
 import math
 
-def truncate(number, decimals = 0):
+
+def truncate(number, decimals=0):
     """
+    Truncates a number to a certain number of decimal places
+
     Args:
-        number
-        decimals
+        number: Number to truncate
+        decimals: Decimals to truncate to
 
-    Returns: Returns a value truncated to a specific number of decimal places
-
+    Returns: Number truncated to decimal place
     """
 
     if not isinstance(decimals, int):

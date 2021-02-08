@@ -6,8 +6,10 @@ import pandas as pd
 class Strategy:
     def __init__(self, pair):
         """
+        Base class for trading strategies upon pairs.
+
         Args:
-            pair
+            pair: Pair of equities to backtest strategy on
 
         """
 
@@ -15,9 +17,11 @@ class Strategy:
 
     def returns(self):
         """
-        Returns: Calculate returns acounting for budget and comissiopn
+        Calculates returns accounting for budget and commission
 
+        Returns: Returns as 2D array
         """
+
         # Get the optimal positions determined by the strategy
         optimal_positions = self.positions()
 
@@ -54,8 +58,9 @@ class Strategy:
 
     def th_returns(self):
         """
-        Returns: theoretical returns without any costs and budget restrictions
+        Calculates theoretical returns without accounting for budget and commission
 
+        Returns: Theoretical returns as 2D array
         """
 
         # Get the optimal positions determined by the strategy
@@ -83,7 +88,7 @@ class Strategy:
 
     def cum_returns(self):
         """
-        Returns: Cumulative Returns
+        Returns: Cumulative returns as series
 
         """
         ret = self.th_returns()

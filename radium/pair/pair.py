@@ -10,9 +10,10 @@ import matplotlib.ticker as ticker
 class Pair:
     def __init__(self, equity1, equity2):
         """
-        Pair of equities (note: first equity is used as response variable in ols regression)
+        Object for pair of equities.
+
         Args:
-            equity1: First equity in pair
+            equity1: First equity in pair, will be used as response variable when regressing
             equity2: Second equity in pair
         """
 
@@ -23,11 +24,12 @@ class Pair:
 
     def hedge_ols(self, lookback):
         """
+        Estimates hedge ratios of equities by OLS regression
+
         Args:
-            lookback: Number of prev. signals to lookback on when regressing ols
+            lookback: Number of signals to lookback on when regressing
 
-        Returns: OLS estimate of hedge ratio for each date w/ first equity as response
-
+        Returns: Hedge ratios as 2D array
         """
 
         # Construct dataframe of closed prices
@@ -48,11 +50,12 @@ class Pair:
 
     def spread_ols(self, lookback):
         """
+        Estimates spread of equities by OLS regression
+
         Args:
-            lookback: Number of prev. signals to lookback on when regressing ols (for hedge ratios)
+            lookback: Number of signals to lookback on when regressing
 
-        Returns: Price spread of pair
-
+        Returns: Price spread as 2D array
         """
 
         # Construct dataframe of closed prices
@@ -69,9 +72,11 @@ class Pair:
 
     def budget(self):
         """
-        Returns: Budget to different decimal places
+        Prints budget to varying decimal places.
 
+        Returns: None
         """
+
         # Get the prices at end_date
         equity1_price = self.equity1.closed.iloc[0]
         equity2_price = self.equity2.closed.iloc[0]
@@ -95,13 +100,15 @@ class Pair:
 
     def plot(self, start_date=None, end_date=None):
         """
+        Plots closed prices of both equities between two dates
+
         Args:
-            start_date: First date to plot (defaults to self val)
-            end_date: Last date to plot (defaults to self val)
+            start_date: First date to plot (default: start_date)
+            end_date: Last date to plot (default: end_date)
 
-        Returns: Plot of adjusted closed prices
-
+        Returns: None
         """
+
         # If no start/end date specified use default
         if start_date is None:
             start_date = self.start_date

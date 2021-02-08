@@ -4,12 +4,14 @@ import requests
 
 def daily(equity):
     """
+    Gets all available daily signals from an equity
+
     Args:
-        equity:
+        equity: Equity to get data from
 
-    Returns: Dataframe of all available daily signals
-
+    Returns: Dataframe of  daily signals
     """
+
     # Get signals in JSON form
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={equity.symbol}&apikey={equity.key}" \
           f"&outputsize=full"

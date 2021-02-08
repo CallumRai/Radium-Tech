@@ -7,6 +7,8 @@ import matplotlib.ticker as ticker
 class Equity:
     def __init__(self, symbol, start_date, end_date, key):
         """
+        Object for single equity
+
         Args:
             symbol: Symbol of equity
             start_date: First day of interest
@@ -44,11 +46,13 @@ class Equity:
 
     def plot(self, start_date=None, end_date=None):
         """
-        Args:
-            start_date: First date to plot (defaults to self val)
-            end_date: Last date to plot (defaults to self val)
+        Plots closed prices of equity between two dates
 
-        Returns: Plot of adjusted closed prices
+        Args:
+            start_date: First date to plot (default: start_date)
+            end_date: Last date to plot (default: end_date)
+
+        Returns: None
 
         """
         # If no start/end date specified use default

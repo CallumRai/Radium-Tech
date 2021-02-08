@@ -3,10 +3,12 @@ import pandas as pd
 
 def johansen_test(pair):
     """
-    Args:
-        pair
+    Conducts a Johansen test on a pair of equities and prints trace/eigenvalue statistic and critical values
 
-    Returns: Prints information from a Johansen test, returns cointegration ratios
+    Args:
+        pair: Pair of Equities to test
+
+    Returns: Cointegration rations
 
     """
 
