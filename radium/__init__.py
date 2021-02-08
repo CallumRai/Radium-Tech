@@ -1,2 +1,2 @@
-from radium.equity import Equity
-from radium.pair import Pair
+from radium.equity.equity import Equity
+from radium.pair.pair import Pair
