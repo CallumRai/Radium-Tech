@@ -28,8 +28,8 @@ class Strategy:
         # Calculate integer positions determined by rounding optimal positions to 3 d.p.
         rounded_positions = np.zeros(optimal_positions.shape)
         for i in range(self.lookback, optimal_positions.shape[0] - 1):
-            rounded_positions[i, 0] = truncate(optimal_positions[i, 0], 3) * 10 ** 3
-            rounded_positions[i, 1] = truncate(optimal_positions[i, 1], 3) * 10 ** 3
+            rounded_positions[i, 0] = _truncate(optimal_positions[i, 0], 3) * 10 ** 3
+            rounded_positions[i, 1] = _truncate(optimal_positions[i, 1], 3) * 10 ** 3
 
         # Get closed prices
         prices = pd.concat([self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
@@ -47,7 +47,7 @@ class Strategy:
         # Calculate Initial Budget, equal to buy 1000 units of each equity
         init_budget = 1000 * (self.pair.equity1.closed.iloc[0] + self.pair.equity2.closed.iloc[0])
         # Truncate to 2 d.p.
-        budget = truncate(init_budget, 2)
+        budget = _truncate(init_budget, 2)
 
         # Calculate returns from Equity 1 and Equity 2
         for i in range(0, len(equity1_orders) - 1):

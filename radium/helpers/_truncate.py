@@ -1,7 +1,7 @@
 import math
 
 
-def truncate(number, decimals=0):
+def _truncate(number, decimals=0):
     """
     Truncates a number to a certain number of decimal places
 

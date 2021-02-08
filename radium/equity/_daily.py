@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 
 
-def daily(equity):
+def _daily(equity):
     """
     Gets all available daily signals from an equity
 

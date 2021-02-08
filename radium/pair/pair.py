@@ -85,10 +85,10 @@ class Pair:
         ratios_th = johansen_test(self)
 
         # Calculate ratios to 4 decimal places, 3 d.p., ..., 1 d.p
-        ratios_4dp = np.array([truncate(n, 4) for n in ratios_th])
-        ratios_3dp = np.array([truncate(n, 3) for n in ratios_th])
-        ratios_2dp = np.array([truncate(n, 2) for n in ratios_th])
-        ratios_1dp = np.array([truncate(n, 1) for n in ratios_th])
+        ratios_4dp = np.array([_truncate(n, 4) for n in ratios_th])
+        ratios_3dp = np.array([_truncate(n, 3) for n in ratios_th])
+        ratios_2dp = np.array([_truncate(n, 2) for n in ratios_th])
+        ratios_1dp = np.array([_truncate(n, 1) for n in ratios_th])
 
         # Calculate budgets for 4 dp, 3 dp, ..., 1 dp
         budget_4dp = equity1_price * ratios_4dp[0] * 10000 + equity2_price * ratios_4dp[1] * 10000

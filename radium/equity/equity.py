@@ -1,5 +1,5 @@
 from datetime import datetime
-from .daily import daily
+from ._daily import _daily
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
@@ -26,7 +26,7 @@ class Equity:
         self.key = key
 
         # Fetch all data
-        df = daily(self)
+        df = _daily(self)
 
         # get dates of interest only
         mask = (df.index >= start_date) & (df.index <= end_date)

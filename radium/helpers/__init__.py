@@ -1,1 +1,1 @@
-from .truncate import truncate
+from ._truncate import _truncate
