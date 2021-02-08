@@ -95,7 +95,7 @@ class Strategy:
         cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
         cum_ret.fillna(method='ffill', inplace=True)
 
-        return cum_ret.values
+        return cum_ret.values.flatten()
 
     def ann_returns(self):
         """
