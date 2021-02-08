@@ -2,7 +2,8 @@ from radium import Equity, Pair
 from radium.pair import johansen_test
 from radium.strategy import BollingerPair
 
-API_KEY = 'R25C111BKODO8RHT'
+# Alpha-vantage API Key
+API_KEY = ''
 
 # Creates equity, pair objects for visa and mastercard 2015-2021
 visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
