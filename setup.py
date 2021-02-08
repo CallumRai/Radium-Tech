@@ -7,10 +7,14 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
+# Get requirements
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 # This call to setup() does all the work
 setup(
     name="Radium-Tech",
-    version="1.0.0",
+    version="0sim.0.0",
     description="Intuitive backtesting for quantitative trading strategies.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -24,7 +28,7 @@ setup(
     ],
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
-    install_requires=["feedparser", "html2text"],
+    install_requires=required,
     entry_points={
         "console_scripts": [
             "realpython=reader.__main__:main",
