@@ -88,14 +88,14 @@ class Strategy:
 
     def cum_returns(self):
         """
-        Returns: Cumulative returns as series
+        Returns: Cumulative returns as array
 
         """
         ret = self.th_returns()
         cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
         cum_ret.fillna(method='ffill', inplace=True)
 
-        return cum_ret
+        return cum_ret.values
 
     def ann_returns(self):
         """
