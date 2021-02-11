@@ -4,7 +4,7 @@ from radium.equity import *
 
 class TestEquity(unittest.TestCase):
     def setUp(self):
-        visa = Equity('V', '2015-01-01', '2021-01-01', 'A6O7S12U02K5YZO7')
+        visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
 
     def test_default(self):
         """
