@@ -1,5 +1,5 @@
 import numpy as np
-from src.helpers import _truncate
+from radium.helpers import _truncate
 import pandas as pd
 
 

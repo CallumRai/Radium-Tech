@@ -1,5 +1,5 @@
 import unittest
-from src import Pair, Equity
+from radium import Pair, Equity
 
 API_KEY = ''
 
