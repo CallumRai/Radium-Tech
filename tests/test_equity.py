@@ -1,5 +1,5 @@
 import unittest
-from radium.equity import *
+from src.equity import *
 
 
 class TestEquity(unittest.TestCase):
