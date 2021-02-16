@@ -1,20 +1,5 @@
 import unittest
-
-# Import radium.helpers as helpers
-import importlib.util
-import sys
-import os
-import pathlib
-
-file_path_list = list(pathlib.Path().parent.absolute().parts)
-file_path_list.extend(['radium', 'helpers', '__init__.py'])
-file_path = os.path.join(*file_path_list)
-
-spec = importlib.util.spec_from_file_location('radium.helpers', file_path)
-helpers = importlib.util.module_from_spec(spec)
-sys.modules['radium.helpers'] = helpers
-spec.loader.exec_module(helpers)
-
+from radium.helpers import _truncate
 
 class TestTruncate(unittest.TestCase):
     def test_truncate_good_input(self):
@@ -33,22 +18,22 @@ class TestTruncate(unittest.TestCase):
                         (1.0, 3, 1.0))
 
         for number, decimals, truncated_number in known_values:
-            result = helpers._truncate(number, decimals)
+            result = _truncate(number, decimals)
             self.assertEqual(truncated_number, result)
 
     def test_not_integer(self):
         '''
         _truncate should fail when decimals not integer
         '''
-        self.assertRaises(TypeError, helpers._truncate, 1.5, 'a')
-        self.assertRaises(TypeError, helpers._truncate, 1.5, 1.5)
+        self.assertRaises(TypeError, _truncate, 1.5, 'a')
+        self.assertRaises(TypeError, _truncate, 1.5, 1.5)
 
     def test_negative(self):
         '''
         _truncate should fail when decimals negative
         '''
-        self.assertRaises(ValueError, helpers._truncate, 11, -1)
-        self.assertRaises(ValueError, helpers._truncate, -10, -2)
+        self.assertRaises(ValueError, _truncate, 11, -1)
+        self.assertRaises(ValueError, _truncate, -10, -2)
 
 
 if __name__ == '__main__':
