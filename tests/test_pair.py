@@ -1,13 +1,15 @@
 import unittest
 from radium import Pair, Equity
 
-API_KEY = ''
 
 class TestPair(unittest.TestCase):
-    def setUp(self):
-        visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
-        mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
-        v_ma = Pair(visa, mastercard)
+    API_KEY = ''
+    with open('tests/api_key.txt') as file:
+        API_KEY = file.readline()
+
+    visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
+    mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
+    v_ma = Pair(visa, mastercard)
 
     def test_default(self):
         """
@@ -20,3 +22,4 @@ class TestPair(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
