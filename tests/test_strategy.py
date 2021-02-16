@@ -1,7 +1,7 @@
 import unittest
-from radium.equity import Equity
-from radium.pair import Pair
-from radium.strategy import BollingerPair
+from src.equity import Equity
+from src.pair import Pair
+from src.strategy import BollingerPair
 
 
 class TestBollingerPair(unittest.TestCase):

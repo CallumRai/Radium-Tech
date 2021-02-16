@@ -2,7 +2,7 @@ import statsmodels.tsa.stattools as ts
 import statsmodels.formula.api as sm
 from .johansen_test import *
 import numpy as np
-from radium.helpers import *
+from src.helpers import *
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker

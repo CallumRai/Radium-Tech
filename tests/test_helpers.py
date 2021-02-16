@@ -5,6 +5,7 @@ import importlib.util
 import sys
 import os
 import pathlib
+
 file_path_list = list(pathlib.Path().parent.absolute().parts)
 file_path_list.extend(['radium', 'helpers', '__init__.py'])
 file_path = os.path.join(*file_path_list)
@@ -14,10 +15,11 @@ helpers = importlib.util.module_from_spec(spec)
 sys.modules['radium.helpers'] = helpers
 spec.loader.exec_module(helpers)
 
+
 class TestTruncate(unittest.TestCase):
     def test_truncate_good_input(self):
         '''
-        Test correctness of _truncate 
+        Test correctness of _truncate
         '''
         known_values = ((1.9999999, 0, 1.0),
                         (1.9999999, 1, 1.9),
@@ -40,7 +42,7 @@ class TestTruncate(unittest.TestCase):
         '''
         self.assertRaises(TypeError, helpers._truncate, 1.5, 'a')
         self.assertRaises(TypeError, helpers._truncate, 1.5, 1.5)
-        
+
     def test_negative(self):
         '''
         _truncate should fail when decimals negative

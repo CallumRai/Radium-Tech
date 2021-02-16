@@ -1,7 +1,7 @@
 import unittest
-from radium.equity import Equity
-from radium.pair import Pair
+from src import Pair, Equity
 
+API_KEY = ''
 
 class TestPair(unittest.TestCase):
     def setUp(self):
@@ -15,7 +15,7 @@ class TestPair(unittest.TestCase):
 
         """
 
-        self.assertTrue(True)
+        self.assertTrue(True)z
 
 
 if __name__ == '__main__':

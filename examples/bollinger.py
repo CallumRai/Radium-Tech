@@ -1,6 +1,6 @@
-from radium import Equity, Pair
-from radium.pair import johansen_test
-from radium.strategy import BollingerPair
+from src import Equity, Pair
+from src.pair import johansen_test
+from src.strategy import BollingerPair
 
 # Alpha-vantage API Key
 API_KEY = ''
