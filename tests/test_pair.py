@@ -15,7 +15,7 @@ class TestPair(unittest.TestCase):
 
         """
 
-        self.assertTrue(True)
+        self.assertTrue(True)z
 
 
 if __name__ == '__main__':
