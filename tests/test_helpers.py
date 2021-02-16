@@ -1,5 +1,5 @@
 import unittest
-from radium.helpers import _truncate
+from src.helpers import _truncate
 
 class TestTruncate(unittest.TestCase):
     def test_truncate_good_input(self):
