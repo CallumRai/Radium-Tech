@@ -2,7 +2,7 @@ import statsmodels.tsa.stattools as ts
 import statsmodels.formula.api as sm
 from .johansen_test import *
 import numpy as np
-from radium.helpers import *
+from radium.helpers import _truncate
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -70,33 +70,35 @@ class Pair:
 
         return spread
 
-    def budget(self):
+    def budget(self, hedge_ratio, dec):
         """
-        Prints budget to varying decimal places.
+        Returns budget needed to buy integer number of equities
 
-        Returns: None
+        Parameters
+        ----------
+        hedge_ratio : int[2] - Equities hedge ratio
+        dec : int - Number of decimals to truncate to 
+
+        Returns
+        -------
+        budget : float - Budget needed rounded to 2 d.p.
         """
 
         # Get the prices at end_date
         equity1_price = self.equity1.closed.iloc[0]
         equity2_price = self.equity2.closed.iloc[0]
 
-        # Calculate theoretical ratios
-        ratios_th = johansen_test(self)
+        # Calculate truncated ratios to given number of decimals 
+        truncated_ratios = np.array([_truncate(n, dec) for n in hedge_ratio])
 
-        # Calculate ratios to 4 decimal places, 3 d.p., ..., 1 d.p
-        ratios_4dp = np.array([_truncate(n, 4) for n in ratios_th])
-        ratios_3dp = np.array([_truncate(n, 3) for n in ratios_th])
-        ratios_2dp = np.array([_truncate(n, 2) for n in ratios_th])
-        ratios_1dp = np.array([_truncate(n, 1) for n in ratios_th])
+        # Calculate budget to buy integer number of equites
+        budget = equity1_price * abs(truncated_ratios[0]) * 10**dec \
+                + equity2_price * abs(truncated_ratios[1]) * 10**dec
 
-        # Calculate budgets for 4 dp, 3 dp, ..., 1 dp
-        budget_4dp = equity1_price * ratios_4dp[0] * 10000 + equity2_price * ratios_4dp[1] * 10000
-        budget_3dp = equity1_price * ratios_3dp[0] * 1000 + equity2_price * ratios_3dp[1] * 1000
-        budget_2dp = equity1_price * ratios_2dp[0] * 100 + equity2_price * ratios_2dp[1] * 100
-        budget_1dp = equity1_price * ratios_1dp[0] * 10 + equity2_price * ratios_1dp[1] * 10
+        # Truncated budget to 2 decimals places
+        budget = _truncate(budget, 2)
 
-        return [budget_1dp, budget_2dp, budget_3dp, budget_4dp]
+        return budget
 
     def plot(self, start_date=None, end_date=None):
         """
