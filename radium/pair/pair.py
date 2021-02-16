@@ -84,6 +84,20 @@ class Pair:
         budget : float - Budget needed rounded to 2 d.p.
         """
 
+        if not isinstance(hedge_ratio, list):
+            raise TypeError('hedge_ratio must be a list')
+        elif not len(hedge_ratio) == 2:
+            raise ValueError('hedge_ratio must have length 2')
+        elif not isinstance(hedge_ratio[0], float):
+            raise TypeError('hedge_ratio must be a list of floats')
+        elif not isinstance(hedge_ratio[1], float):
+            raise TypeError('hedge_ratio must be a list of floats')
+
+        if not isinstance(dec, int):
+            raise TypeError('Decimal places must be an integer.')
+        elif dec < 0:
+            raise ValueError('Decimal places has to be >= 0.')
+
         # Get the prices at end_date
         equity1_price = self.equity1.closed.iloc[0]
         equity2_price = self.equity2.closed.iloc[0]
