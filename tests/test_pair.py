@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 from radium import Pair, Equity
+from radium.helpers import _truncate
 
 
 class TestPair(unittest.TestCase):
@@ -48,12 +49,62 @@ class TestPair(unittest.TestCase):
         self.assertRaises(ValueError, TestPair.V_MA.hedge_ols, 0)
         self.assertRaises(ValueError, TestPair.V_MA.hedge_ols, -10)
 
+    def test_price_spread_good_input(self):
+        """
+        Test correctness of Pair.price_spread
+        """
+        shape0 = TestPair.visa.closed.shape[0]
+        hedge_ratios1 = np.ones((shape0, 2))
+        hedge_ratios2 = np.full((shape0, 2), 2)
+        hedge_ratios3 = np.full((shape0, 2), 1.5)
+
+        hedge_ratios4 = np.ones((shape0, 2))
+        hedge_ratios4[:, 1] *= -1
+        hedge_ratios5 = np.full((shape0, 2), 2)
+        hedge_ratios5[:, 1] *= -1
+        hedge_ratios6 = np.full((shape0, 2), 1.5)
+        hedge_ratios6[:, 1] *= -1
+
+        known_values = ((hedge_ratios1, 574.88),
+                        (hedge_ratios2, 1149.77),
+                        (hedge_ratios3, 862.33),
+                        (hedge_ratios4, -138.09),
+                        (hedge_ratios5, -276.18),
+                        (hedge_ratios6, -207.14))
+
+        for hedge_ratios, spread in known_values:
+            result = TestPair.V_MA.price_spread(hedge_ratios)
+            truncated_last_result = _truncate(result[0], 2)
+            self.assertEqual(spread, truncated_last_result)
+
+    def test_price_spread_bad_input(self):
+        """
+        Test excpetion handling of Pair.hedge_ols
+        """
+
+        self.assertRaises(TypeError, TestPair.V_MA.price_spread, [])
+        self.assertRaises(TypeError, TestPair.V_MA.price_spread, [[1, -0.5]])
+
+        # Raise TypeError when hedge_ratios.shape[0] != equity1.closed.shape[0]
+        self.assertRaises(TypeError,
+                          TestPair.V_MA.price_spread,
+                          np.ones((10, 2)))
+
+        # Raise TypeError when hedge_ratios.shape[1] != 2
+        shape0 = TestPair.visa.closed.shape[0]
+        self.assertRaises(TypeError,
+                          TestPair.V_MA.price_spread,
+                          np.ones((shape0, 1)))
+        self.assertRaises(TypeError,
+                          TestPair.V_MA.price_spread,
+                          np.ones((shape0, 3)))
+
     def test_budget_good_input(self):
         """
         Test correctness of Pair.budget method
 
-        Visa price on 2021-01-01: 218.398245331 
-        Mastercard price on 2021-01-01: 356.49165972
+        Visa price on 2020-12-31: 218.398245331 
+        Mastercard price on 2020-12-311: 356.49165972
         """
 
         known_values = (([1.0, 1.0], 0, 574.88),

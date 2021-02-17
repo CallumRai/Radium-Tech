@@ -73,31 +73,46 @@ class Pair:
             df_lookback = df[(i - lookback):i]
             ols = sm.ols(formula, df_lookback).fit()
 
-            # Hedge ratio for date is -1*(OLS gradient)
+            # Hedge ratio for equity2 is -1*(OLS gradient)
             hedge_ratios[i - 1][0] = 1
             hedge_ratios[i - 1][1] = -1*ols.params[1]
 
         return hedge_ratios
 
-    def spread_ols(self, lookback):
+    def price_spread(self, hedge_ratios):
         """
-        Estimates spread of equities by OLS regression
+        Calculate price spread of equities for given hedge_ratios
 
-        Args:
-            lookback: Number of signals to lookback on when regressing
+        Parameters
+        ----------
+        hedge_ratios : np.float[][2]
 
-        Returns: Price spread as 2D array
+        Returns
+        -------
+        spread : np.float[]
+            Spread calculated using y = h1*y1 + h2*y2
+
+        Raises
+        ------
+        TypeError
+            If hedge_ratios isn't a 2D ndarray with same number of entries
+            as equity.closed
         """
+
+        if not isinstance(hedge_ratios, np.ndarray):
+            raise TypeError('hedge_ratios needs to be an np.ndarray')
+        elif hedge_ratios.shape[1] != 2:
+            raise TypeError('hedge_ratios needs to be an 2D np.ndarray')
+        elif hedge_ratios.shape[0] != self.equity1.closed.shape[0]:
+            msg = 'hedge_ratios.shape[0] !=  equity1.closed.shape[0]'
+            raise TypeError(msg)
 
         # Construct dataframe of closed prices
-        df = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
-        df.columns = [self.equity1.symbol, self.equity2.symbol]
+        prices = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
+        prices.columns = [self.equity1.symbol, self.equity2.symbol]
 
-        hedge_ratio = self.hedge_ols(lookback)
-        # create matrix of 1s and -h to element-wise multiply with close data for spread (y = y1 - hy2)
-        hedge_matrix = ts.add_constant(-hedge_ratio)
-        # multiply and add for each date
-        spread = np.sum(hedge_matrix * df, axis=1)
+        # Multiply and add for each date
+        spread = np.sum(hedge_ratios * prices, axis=1)
 
         return spread
 
