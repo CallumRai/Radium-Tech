@@ -9,11 +9,17 @@ class TestPair(unittest.TestCase):
         with open('tests/api_key.txt') as file:
             TestPair.API_KEY = file.readline()
 
-        TestPair.visa = Equity('V', '2015-01-01', '2021-01-01', TestPair.API_KEY)
-        TestPair.mastercard = Equity('MA', '2015-01-01', '2021-01-01', TestPair.API_KEY)
+        TestPair.visa = \
+                Equity('V', '2015-01-01', '2021-01-01', TestPair.API_KEY)
+        TestPair.mastercard = \
+                Equity('MA', '2015-01-01', '2021-01-01', TestPair.API_KEY)
         TestPair.V_MA = Pair(TestPair.visa, TestPair.mastercard)
 
     def test_init_bad_input(self):
+        """ 
+        Test exception handling of Pair.__init__ method
+        """
+
         self.assertRaises(TypeError, Pair, 'not equity', 'not equity')
         self.assertRaises(TypeError, Pair, TestPair.visa, 'not equity')
         self.assertRaises(TypeError, Pair, 'not equity', TestPair.visa)
@@ -25,6 +31,7 @@ class TestPair(unittest.TestCase):
         Visa price on 2021-01-01: 218.398245331 
         Mastercard price on 2021-01-01: 356.49165972
         """
+
         known_values = (([1.0, 1.0], 0, 574.88),
                         ([1.0, 1.0], 1, 5748.89),
                         ([1.0, 1.0], 2, 57488.99),
@@ -49,7 +56,7 @@ class TestPair(unittest.TestCase):
 
     def test_budget_bad_input(self):
         """
-        Test Exception handling of Pair.budget method
+        Test exception handling of Pair.budget method
         """
 
         # Test bad decimal inputs
