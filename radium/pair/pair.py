@@ -76,12 +76,22 @@ class Pair:
 
         Parameters
         ----------
-        hedge_ratio : int[2] - Equities hedge ratio
-        dec : int - Number of decimals to truncate to 
+        hedge_ratio : int[2]
+            Equities hedge ratio
+        dec : int
+            Number of decimals to truncate to 
 
         Returns
         -------
-        budget : float - Budget needed rounded to 2 d.p.
+        budget : float
+            Budget needed rounded to 2 d.p.
+
+        Raises
+        -----
+        TypeError
+            If hedge_ratio isnt a list of floats, or dec isnt an integer
+        ValueError
+            If hedge_ratio isn't length 2 or dec < 0
         """
 
         if not isinstance(hedge_ratio, list):
