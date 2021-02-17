@@ -2,6 +2,7 @@ import statsmodels.tsa.stattools as ts
 import statsmodels.formula.api as sm
 from .johansen_test import *
 import numpy as np
+from radium import Equity
 from radium.helpers import _truncate
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -10,12 +11,24 @@ import matplotlib.ticker as ticker
 class Pair:
     def __init__(self, equity1, equity2):
         """
-        Object for pair of equities.
+        Initialise Pair class
 
-        Args:
-            equity1: First equity in pair, will be used as response variable when regressing
-            equity2: Second equity in pair
+        Parameters
+        ----------
+        equity1 : radium.Equity 
+            Will be used as response variable when regressing
+        equity2 : radium.Equity 
+
+        Raises
+        ------
+        TypeError
+            If equity1 or equity2 isnt radium.Equity
         """
+
+        if not isinstance(equity1, Equity):
+            raise TypeError('equity1 must be an Equity object')
+        elif not isinstance(equity2, Equity):
+            raise TypeError('equity2 must be an Equity object')
 
         self.equity1 = equity1
         self.equity2 = equity2

@@ -7,11 +7,16 @@ class TestPair(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with open('tests/api_key.txt') as file:
-            API_KEY = file.readline()
+            TestPair.API_KEY = file.readline()
 
-        visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
-        mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
-        TestPair.V_MA = Pair(visa, mastercard)
+        TestPair.visa = Equity('V', '2015-01-01', '2021-01-01', TestPair.API_KEY)
+        TestPair.mastercard = Equity('MA', '2015-01-01', '2021-01-01', TestPair.API_KEY)
+        TestPair.V_MA = Pair(TestPair.visa, TestPair.mastercard)
+
+    def test_init_bad_input(self):
+        self.assertRaises(TypeError, Pair, 'not equity', 'not equity')
+        self.assertRaises(TypeError, Pair, TestPair.visa, 'not equity')
+        self.assertRaises(TypeError, Pair, 'not equity', TestPair.visa)
 
     def test_budget_good_input(self):
         """
