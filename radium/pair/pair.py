@@ -4,7 +4,7 @@ from .johansen_test import *
 import numpy as np
 from radium import Equity
 from radium.helpers import _truncate
-from datetime import datetime
+from datetime import datetime, date
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
@@ -16,13 +16,12 @@ class Pair:
         Parameters
         ----------
         equity1 : radium.Equity 
-            Will be used as response variable when regressing
         equity2 : radium.Equity 
 
         Raises
         ------
         TypeError
-            If equity1 or equity2 isnt radium.Equity
+            If equity1 or equity2 isnt radium.Equity.
         """
 
         if not isinstance(equity1, Equity):
@@ -37,7 +36,8 @@ class Pair:
 
     def hedge_ols(self, lookback):
         """
-        Calculated pair hedge ratios by OLS regression.
+        Calculate pair hedge ratios by OLS regression. self.equity1 will be used
+        as response variable when regressing.
 
         Parameters
         ----------
@@ -81,7 +81,7 @@ class Pair:
 
     def price_spread(self, hedge_ratios):
         """
-        Calculate price spread of equities for given hedge_ratios
+        Calculate price spread of equities for given hedge_ratios.
 
         Parameters
         ----------
@@ -90,13 +90,13 @@ class Pair:
         Returns
         -------
         spread : np.float[]
-            Spread calculated using y = h1*y1 + h2*y2
+            Spread calculated using y = h1*y1 + h2*y2.
 
         Raises
         ------
         TypeError
             If hedge_ratios isn't a 2D ndarray with same number of entries
-            as equity.closed
+            as equity.closed.
         """
 
         if not isinstance(hedge_ratios, np.ndarray):
@@ -118,7 +118,7 @@ class Pair:
 
     def budget(self, hedge_ratio, dec):
         """
-        Returns budget needed to buy integer number of equities
+        Returns budget needed to buy integer number of equities.
 
         Parameters
         ----------
@@ -135,9 +135,9 @@ class Pair:
         Raises
         -----
         TypeError
-            If hedge_ratio isnt a list of floats, or dec isnt an integer
+            If hedge_ratio isnt a list of floats, or dec isnt an integer.
         ValueError
-            If hedge_ratio isn't length 2 or dec < 0
+            If hedge_ratio isn't length 2 or dec < 0.
         """
 
         if not isinstance(hedge_ratio, list):
@@ -170,46 +170,74 @@ class Pair:
 
         return budget
 
-    def plot(self, start_date=None, end_date=None):
+    def plot_closed(self, start_date=None, end_date=None):
         """
-        Plots closed prices of both equities between two dates
+        Plots closed prices of both equities between two dates.
 
-        Args:
-            start_date: First date to plot (default: start_date)
-            end_date: Last date to plot (default: end_date)
+        Parameters
+        ----------
+        start_date : datetime.date or 'YYYY-MM-DD', default=self.start_date 
+        end_date : datetime.date or 'YYYY-MM-DD', default=self.end_date 
 
-        Returns: None
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        TypeError
+            If start_date/end_date isn't datetime.date or correctly formated
+            string.
+        ValueError
+            If end_date <= start_date.
+
         """
 
-        # If no start/end date specified use default
-        if start_date is None:
-            start_date = self.start_date
-        else:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        # Assign default values to start_date/end_date
+        start_date = self.start_date if start_date == None else start_date
+        end_date = self.end_date if end_date == None else end_date
 
-        if end_date is None:
-            end_date = self.end_date
-        else:
-            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        # Exception Handling
+        if not isinstance(start_date, date):
+            try:
+                start_date = datetime.strptime(start_date, "%Y-%m-%d").date() 
+            except:
+                msg = 'start_date must be datetime.date or "YYYY-MM-DD"'
+                raise TypeError(msg)
+
+        if not isinstance(end_date, date):
+            try:
+                end_date = datetime.strptime(end_date, "%Y-%m-%d").date() 
+            except:
+                msg = 'end_date must be datetime.date or "YYYY-MM-DD"'
+                raise TypeError(msg)
 
         # Raises error if date range invalid
         if end_date <= start_date:
-            raise Exception("End date same as or before start date")
+            raise ValueError('end_date must be greater than start_date')
+        elif start_date < self.start_date:
+            raise ValueError('start_date cant be before pair.start_date')
+        elif end_date > self.end_date:
+            raise ValueError('end_date cant be before pair.end_date')
 
         # Gets required range only for both equities
         equity1_closed = self.equity1.closed
-        mask = (equity1_closed.index >= start_date) & (equity1_closed.index <= end_date)
+        mask = (equity1_closed.index >= start_date) \
+                & (equity1_closed.index <= end_date)
         equity1_closed = equity1_closed.loc[mask]
 
         equity2_closed = self.equity2.closed
-        mask = (equity2_closed.index >= start_date) & (equity2_closed.index <= end_date)
+        mask = (equity2_closed.index >= start_date) \
+                & (equity2_closed.index <= end_date)
         equity2_closed = equity2_closed.loc[mask]
 
         fig, ax = plt.subplots()
         plt.plot(equity1_closed, label = self.equity1.symbol)
         plt.plot(equity2_closed, label = self.equity2.symbol)
 
-        plt.title(f"{self.equity1.symbol} and {self.equity2.symbol} from {start_date} to {end_date}")
+        title = (f'{self.equity1.symbol} and {self.equity2.symbol} '
+                 f'from {start_date} to {end_date}')
+        plt.title(title)
         plt.xlabel("Date")
         plt.ylabel("Adjusted closed prices ($)")
 

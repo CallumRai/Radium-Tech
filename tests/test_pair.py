@@ -1,4 +1,5 @@
 import unittest
+from datetime import date
 import numpy as np
 from radium import Pair, Equity
 from radium.helpers import _truncate
@@ -131,7 +132,7 @@ class TestPair(unittest.TestCase):
 
     def test_budget_bad_input(self):
         """
-        Test exception handling of Pair.budget method
+        Test exception handling of Pair.budget method.
         """
 
         # Test bad decimal inputs
@@ -147,6 +148,36 @@ class TestPair(unittest.TestCase):
         self.assertRaises(TypeError, TestPair.V_MA.budget, ['1','2'], 1)
         self.assertRaises(TypeError, TestPair.V_MA.budget, 1, 1)
 
+    def test_plot_closed_bad_input(self):
+        """
+        Test exception handling of Pair.plot_closed methods.
+        """
+
+        # Wrong string formatting
+        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, '20150101')
+        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, '2015-20-01')
+        self.assertRaises(TypeError,
+                          TestPair.V_MA.plot_closed,
+                          end_date='20180101')
+        self.assertRaises(TypeError,
+                          TestPair.V_MA.plot_closed,
+                          end_date='2018-20-01')
+
+        # Wrong input type
+        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, 20150101)
+        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, end_date=2015)
+
+        # Wrong date ranges
+        self.assertRaises(ValueError,
+                          TestPair.V_MA.plot_closed,
+                          '2016-01-01',
+                          '2015-01-01')
+        self.assertRaises(ValueError,
+                          TestPair.V_MA.plot_closed,
+                          date(2014,1,1))
+        self.assertRaises(ValueError,
+                          TestPair.V_MA.plot_closed,
+                          date(2022,1,1))
 
 
 if __name__ == '__main__':

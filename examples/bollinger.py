@@ -11,7 +11,7 @@ mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
 v_ma = Pair(visa, mastercard)
 
 # Visualise data
-v_ma.plot()
+v_ma.plot_closed()
 
 # Test for cointegration
 johansen_test(v_ma)
