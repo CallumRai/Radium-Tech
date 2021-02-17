@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from radium import Pair, Equity
 
 
@@ -23,6 +24,19 @@ class TestPair(unittest.TestCase):
         self.assertRaises(TypeError, Pair, 'not equity', 'not equity')
         self.assertRaises(TypeError, Pair, TestPair.visa, 'not equity')
         self.assertRaises(TypeError, Pair, 'not equity', TestPair.visa)
+
+    def test_hedge_ols_good_input(self):
+        """
+        Test correctnes of Pair.hedge_ols method
+        """
+
+        hedge_ratios = TestPair.V_MA.hedge_ols(30)
+
+        self.assertEqual(hedge_ratios.shape[1], 2)
+        self.assertEqual(hedge_ratios[-2][0], 1)
+        self.assertIsInstance(hedge_ratios[-2][1], np.float)
+        self.assertTrue(hedge_ratios[-2][1] < 0)
+
 
     def test_hedge_ols_bad_input(self):
         """
