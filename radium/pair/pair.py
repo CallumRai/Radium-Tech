@@ -37,29 +37,46 @@ class Pair:
 
     def hedge_ols(self, lookback):
         """
-        Estimates hedge ratios of equities by OLS regression
+        Calculated pair hedge ratios by OLS regression.
 
-        Args:
-            lookback: Number of signals to lookback on when regressing
+        Parameters
+        ----------
+        lookback : int > 0 
+            Number of signals to lookback on when regressing.
 
-        Returns: Hedge ratios as 2D array
+        Returns 
+        -------
+        hedge_ratios : np.float[][2]
+            Hedge ratios as 2D array.
+
+        Raises
+        ------
+        TypeError
+            If lookback isn't an interger.
+        ValueError
+            If lookback <= 0.
         """
+
+        if not isinstance(lookback, int):
+            raise TypeError('lookback must be an integer.')
+        elif lookback <= 0 :
+            raise ValueError('lookback must be > 0')
 
         # Construct dataframe of closed prices
         df = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
         df.columns = [self.equity1.symbol, self.equity2.symbol]
 
         # Get ols regression result for each date
-        hedge_ratio = np.full(df.shape[0], np.nan)
-        for i in range(lookback, len(hedge_ratio)):
+        hedge_ratios = np.full(df.shape[0], np.nan)
+        for i in range(lookback, len(hedge_ratios)):
             formula = f"{self.equity1.symbol} ~ {self.equity2.symbol}"
             df_lookback = df[(i - lookback):i]
             ols = sm.ols(formula, df_lookback).fit()
 
             # Hedge ratio for date is ols gradient
-            hedge_ratio[i - 1] = ols.params[1]
+            hedge_ratios[i - 1] = ols.params[1]
 
-        return hedge_ratio
+        return hedge_ratios
 
     def spread_ols(self, lookback):
         """

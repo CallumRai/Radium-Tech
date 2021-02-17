@@ -24,6 +24,16 @@ class TestPair(unittest.TestCase):
         self.assertRaises(TypeError, Pair, TestPair.visa, 'not equity')
         self.assertRaises(TypeError, Pair, 'not equity', TestPair.visa)
 
+    def test_hedge_ols_bad_input(self):
+        """
+        Test exception handling of Pair.hedge_ols
+        """
+
+        self.assertRaises(TypeError, TestPair.V_MA.hedge_ols, 'a')
+        self.assertRaises(TypeError, TestPair.V_MA.hedge_ols, 1.5)
+        self.assertRaises(ValueError, TestPair.V_MA.hedge_ols, 0)
+        self.assertRaises(ValueError, TestPair.V_MA.hedge_ols, -10)
+
     def test_budget_good_input(self):
         """
         Test correctness of Pair.budget method
