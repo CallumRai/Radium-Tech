@@ -46,8 +46,8 @@ class Pair:
 
         Returns 
         -------
-        hedge_ratios : np.float[][2]
-            Hedge ratios as 2D array.
+        hedge_ratio : np.float[]
+            OLS gradient as hedge ratio for equity2 (y = y1 - h*y2).
 
         Raises
         ------
@@ -67,16 +67,16 @@ class Pair:
         df.columns = [self.equity1.symbol, self.equity2.symbol]
 
         # Get ols regression result for each date
-        hedge_ratios = np.full(df.shape[0], np.nan)
-        for i in range(lookback, len(hedge_ratios)):
+        hedge_ratio = np.full(df.shape[0], np.nan)
+        for i in range(lookback, len(hedge_ratio)):
             formula = f"{self.equity1.symbol} ~ {self.equity2.symbol}"
             df_lookback = df[(i - lookback):i]
             ols = sm.ols(formula, df_lookback).fit()
 
             # Hedge ratio for date is ols gradient
-            hedge_ratios[i - 1] = ols.params[1]
+            hedge_ratio[i - 1] = ols.params[1]
 
-        return hedge_ratios
+        return hedge_ratio
 
     def spread_ols(self, lookback):
         """
