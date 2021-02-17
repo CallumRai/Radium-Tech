@@ -29,7 +29,8 @@ class BollingerPair(Strategy):
         """
 
         # Get pair spread using ols estimate of hedge ratio w/ lookback
-        spread = self.pair.spread_ols(self.lookback)
+        hedge_ratios = self.pair.hedge_ols(self.lookback)
+        spread = self.pair.price_spread(hedge_ratios)
 
         # Calculate Z-score
         spread_mean = spread.rolling(self.lookback).mean()
