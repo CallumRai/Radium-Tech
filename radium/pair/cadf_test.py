@@ -3,13 +3,21 @@ import statsmodels.tsa.stattools as ts
 
 def cadf_test(pair):
     """
-    Conducts a CADF test on a pair of equities and prints t-statistic, p-value and critical values
+    Conducts a Cointegrated Augmented Dickey Fuller Test on a pair of equities 
+    and prints t-statistic, p-value and critical values.
 
-    Args:
-        pair: Pair of Equities to test
+    Parameters
+    ----------
+    pair : radium.Pair
 
-    Returns: None
+    Returns
+    -------
+    None
 
+    Raises
+    ------
+    TypeError
+        If pair isn't radium.Pair.
     """
 
     # Get closed prices in dataframe
