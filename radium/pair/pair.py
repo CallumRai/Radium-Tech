@@ -1,12 +1,13 @@
-import statsmodels.tsa.stattools as ts
-import statsmodels.formula.api as sm
-from .johansen_test import *
-import numpy as np
-from radium import Equity
-from radium.helpers import _truncate
 from datetime import datetime, date
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import statsmodels.tsa.stattools as ts
+import statsmodels.formula.api as sm
+
+from radium import Equity
+from radium.helpers import _truncate
 
 class Pair:
     def __init__(self, equity1, equity2):

@@ -3,7 +3,7 @@ from datetime import date
 import numpy as np
 
 from radium import Pair, Equity
-from radium.pair import cadf_test
+from radium.pair import cadf_test, johansen_test
 from radium.helpers import _truncate
 
 
@@ -191,6 +191,13 @@ class TestPairFunctions(unittest.TestCase):
         """
 
         self.assertRaises(TypeError, cadf_test, 'bad input')
+
+    def test_johansen_test_bad_input(self):
+        """
+        Test exception handling of johansen_test
+        """
+
+        self.assertRaises(TypeError, johansen_test, 'bad input')
 
 
 if __name__ == '__main__':
