@@ -32,7 +32,8 @@ def cadf_test(pair):
     df = pd.concat([equity1_df, equity2_df], axis=1, join="inner")
 
     # Get CADF result
-    coint_t, pvalue, crit_value = ts.coint(df[pair.equity1.symbol], df[pair.equity2.symbol])
+    coint_t, pvalue, crit_value = ts.coint(df[pair.equity1.symbol],
+                                           df[pair.equity2.symbol])
 
     # Round to make more interpretable
     coint_t = round(coint_t, 3)
@@ -40,11 +41,13 @@ def cadf_test(pair):
     crit_value = [round(x, 3) for x in crit_value]
 
     # Print results
-    print(f"CADFTest for cointegration between {pair.equity1.symbol} and {pair.equity2.symbol} from {pair.start_date}"
-          f" to {pair.end_date}\n")
-    print(f"t-statistic = {coint_t}")
-    print(f"p-value = {pvalue}\n")
-    print(f"1% Critical Value: {crit_value[0]}")
-    print(f"5% Critical Value: {crit_value[1]}")
-    print(f"10% Critical Value: {crit_value[2]}")
-    print("\n")
+    results = (f'CADFTest for cointegration between {pair.equity1.symbol} and' 
+               f'{pair.equity2.symbol} from {pair.start_date}to {pair.end_date}'
+               '\n\n'
+               f't-statistic = {coint_t}\n'
+               f'p-value = {pvalue}\n\n'
+               f'1% Critical Value: {crit_value[0]}\n'
+               f'5% Critical Value: {crit_value[1]}\n'
+               f'10% Critical Value: {crit_value[2]}\n\n')
+
+    print(results)
