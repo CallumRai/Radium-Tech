@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from radium.helpers import _truncate
 
-class Strategy:
+class PairStrategy:
     def __init__(self, pair):
         """
         Base class for trading strategies upon pairs.
