@@ -1,7 +1,7 @@
-import statsmodels.tsa.stattools as ts
 import pandas as pd
+import statsmodels.tsa.stattools as ts
 
-def CADF_Test(pair):
+def cadf_test(pair):
     """
     Conducts a CADF test on a pair of equities and prints t-statistic, p-value and critical values
 
