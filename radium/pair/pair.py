@@ -10,21 +10,28 @@ from radium import Equity
 from radium.helpers import _truncate
 
 class Pair:
+    """
+    Initialise Pair class
+
+    Parameters
+    ----------
+    equity1 : radium.Equity 
+    equity2 : radium.Equity 
+
+    Attributes
+    ----------
+    equity1 : radium.Equity
+    equity2 : radium.Equity
+    start_date : datetime.date
+    end_date : datetime.date
+
+    Raises
+    ------
+    TypeError
+        If equity1 or equity2 isnt radium.Equity.
+    """
+
     def __init__(self, equity1, equity2):
-        """
-        Initialise Pair class
-
-        Parameters
-        ----------
-        equity1 : radium.Equity 
-        equity2 : radium.Equity 
-
-        Raises
-        ------
-        TypeError
-            If equity1 or equity2 isnt radium.Equity.
-        """
-
         if not isinstance(equity1, Equity):
             raise TypeError('equity1 must be an Equity object')
         elif not isinstance(equity2, Equity):
