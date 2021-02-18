@@ -1,6 +1,8 @@
 import pandas as pd
 import statsmodels.tsa.stattools as ts
 
+from .pair import Pair
+
 def cadf_test(pair):
     """
     Conducts a Cointegrated Augmented Dickey Fuller Test on a pair of equities 
@@ -19,6 +21,9 @@ def cadf_test(pair):
     TypeError
         If pair isn't radium.Pair.
     """
+
+    if not isinstance(pair, Pair):
+        raise TypeError('pair must be an radium.Pair object')
 
     # Get closed prices in dataframe
     equity1_df = pair.equity1.closed
