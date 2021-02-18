@@ -41,9 +41,9 @@ def cadf_test(pair):
     crit_value = [round(x, 3) for x in crit_value]
 
     # Print results
-    results = (f'CADFTest for cointegration between {pair.equity1.symbol} and' 
-               f'{pair.equity2.symbol} from {pair.start_date}to {pair.end_date}'
-               '\n\n'
+    results = (f'CADF Test for cointegration between {pair.equity1.symbol} ' 
+               f'and {pair.equity2.symbol} from {pair.start_date} to '
+               f'{pair.end_date}\n\n'
                f't-statistic = {coint_t}\n'
                f'p-value = {pvalue}\n\n'
                f'1% Critical Value: {crit_value[0]}\n'
