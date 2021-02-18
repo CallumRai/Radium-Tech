@@ -1,17 +1,43 @@
 import numpy as np
 import pandas as pd
+
+from radium import Pair
 from radium.helpers import _truncate
 
 class PairStrategy:
+    """
+    Base class for equity pair trading strategies.
+
+    Parameters
+    ----------
+    pair : radium.Pair
+
+    Attributes
+    ----------
+    positions : np.int[][2]
+        Number of equities long/short each day.
+    th_positions : np.float[][2]
+        Theoretical unrounded number of equities long/short each day.
+    th_daily_returns : np.float[]
+        Theoretical daily returns without budget restrains/costs.
+    th_annualised_returns : float
+        Theoretical geometric average amount of money earned by an investment
+        each year over a given time period.
+    th_sharpe_ratio : float
+    th_max_drawdown : float
+    th_max_drawdown_duration : int
+        Number of days maximum drawdown lasted.
+
+    Raises
+    ------
+    TypeError
+        If pair isn't radium.Pair.
+    """
+
     def __init__(self, pair):
-        """
-        Base class for trading strategies upon pairs.
-
-        Args:
-            pair: Pair of equities to backtest strategy on
-
-        """
-
+        # Exception handling
+        if not isinstance(pair, Pair):
+            raise TypeError('pair must be an radium.Pair object')
         self.pair = pair
 
     def th_returns(self):
