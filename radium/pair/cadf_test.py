@@ -1,16 +1,29 @@
-import statsmodels.tsa.stattools as ts
 import pandas as pd
+import statsmodels.tsa.stattools as ts
 
-def CADF_Test(pair):
+from .pair import Pair
+
+def cadf_test(pair):
     """
-    Conducts a CADF test on a pair of equities and prints t-statistic, p-value and critical values
+    Conducts a Cointegrated Augmented Dickey Fuller Test on a pair of equities 
+    and prints t-statistic, p-value and critical values.
 
-    Args:
-        pair: Pair of Equities to test
+    Parameters
+    ----------
+    pair : radium.Pair
 
-    Returns: None
+    Returns
+    -------
+    None
 
+    Raises
+    ------
+    TypeError
+        If pair isn't radium.Pair.
     """
+
+    if not isinstance(pair, Pair):
+        raise TypeError('pair must be a radium.Pair object')
 
     # Get closed prices in dataframe
     equity1_df = pair.equity1.closed
@@ -24,7 +37,8 @@ def CADF_Test(pair):
     df = pd.concat([equity1_df, equity2_df], axis=1, join="inner")
 
     # Get CADF result
-    coint_t, pvalue, crit_value = ts.coint(df[pair.equity1.symbol], df[pair.equity2.symbol])
+    coint_t, pvalue, crit_value = ts.coint(df[pair.equity1.symbol],
+                                           df[pair.equity2.symbol])
 
     # Round to make more interpretable
     coint_t = round(coint_t, 3)
@@ -32,11 +46,13 @@ def CADF_Test(pair):
     crit_value = [round(x, 3) for x in crit_value]
 
     # Print results
-    print(f"CADFTest for cointegration between {pair.equity1.symbol} and {pair.equity2.symbol} from {pair.start_date}"
-          f" to {pair.end_date}\n")
-    print(f"t-statistic = {coint_t}")
-    print(f"p-value = {pvalue}\n")
-    print(f"1% Critical Value: {crit_value[0]}")
-    print(f"5% Critical Value: {crit_value[1]}")
-    print(f"10% Critical Value: {crit_value[2]}")
-    print("\n")
+    results = (f'CADF Test for cointegration between {pair.equity1.symbol} ' 
+               f'and {pair.equity2.symbol} from {pair.start_date} to '
+               f'{pair.end_date}\n\n'
+               f't-statistic = {coint_t}\n'
+               f'p-value = {pvalue}\n\n'
+               f'1% Critical Value: {crit_value[0]}\n'
+               f'5% Critical Value: {crit_value[1]}\n'
+               f'10% Critical Value: {crit_value[2]}\n\n')
+
+    print(results)

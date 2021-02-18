@@ -1,16 +1,29 @@
 import statsmodels.tsa.vector_ar.vecm as vm
 import pandas as pd
 
+from .pair import Pair
+
 def johansen_test(pair):
     """
-    Conducts a Johansen test on a pair of equities and prints trace/eigenvalue statistic and critical values
+    Conducts a Johansen Test on a pair of equities and prints 
+    trace/eigenvalue statistics and critical values.
 
-    Args:
-        pair: Pair of Equities to test
+    Parameters
+    ----------
+    pair : radium.Pair
 
-    Returns: Cointegration rations
+    Returns
+    -------
+    None
 
+    Raises
+    ------
+    TypeError
+        If pair isn't radium.Pair
     """
+
+    if not isinstance(pair, Pair):
+        raise TypeError('pair must be a radium.Pair object')
 
     # Get closed prices in dataframe
     equity1_df = pair.equity1.closed
@@ -37,19 +50,23 @@ def johansen_test(pair):
     eigen_crit = [[round(x, 3) for x in y] for y in eigen_crit]
 
     # Print results
-    print(f"Johansen Test for cointegration between {pair.equity1.symbol} and {pair.equity2.symbol} from"
-          f" {pair.start_date} to {pair.end_date}")
-    for i in [0,1]:
-        print(f"\nr<={i} Trace Statistic = {trace_stat[i]}")
-        print(f"r<={i} Trace Critical Values:")
-        print(f"1%: {trace_crit[i][0]}\n5%: {trace_crit[i][1]}\n10% {trace_crit[i][2]}")
+    print(f'Johansen Test for cointegration between {pair.equity1.symbol} and ' 
+          f'{pair.equity2.symbol} from {pair.start_date} to {pair.end_date}\n')
 
     for i in [0,1]:
-        print(f"\nr<={i} Eigenvalue Statistic = {eigen_stat[i]}")
-        print(f"r<={i} Eigenvalue Critical Values: ")
-        print(f"1%: {eigen_crit[i][0]}\n5%: {eigen_crit[i][1]}\n10% {eigen_crit[i][2]}")
+        print(f'r<={i} Trace Statistic = {trace_stat[i]}\n'
+              f'r<={i} Trace Critical Values:\n'
+              f'1%: {trace_crit[i][0]}\n'
+              f'5%: {trace_crit[i][1]}\n'
+              f'10% {trace_crit[i][2]}')
 
-    print("\n")
+    print('\n')
 
-    # Return cointegration ratios
-    return result.evec[:, 0]
+    for i in [0,1]:
+        print(f'r<={i} Eigenvalue Statistic = {eigen_stat[i]}\n'
+              f'r<={i} Eigenvalue Critical Values:\n'
+              f'1%: {eigen_crit[i][0]}\n'
+              f'5%: {eigen_crit[i][1]}\n'
+              f'10% {eigen_crit[i][2]}')
+
+    print('\n')

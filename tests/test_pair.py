@@ -1,7 +1,9 @@
 import unittest
 from datetime import date
 import numpy as np
+
 from radium import Pair, Equity
+from radium.pair import cadf_test, johansen_test
 from radium.helpers import _truncate
 
 
@@ -178,6 +180,24 @@ class TestPair(unittest.TestCase):
         self.assertRaises(ValueError,
                           TestPair.V_MA.plot_closed,
                           date(2022,1,1))
+
+
+# Test radium.pair functions outside Pair class
+class TestPairFunctions(unittest.TestCase):
+
+    def test_cadf_test_bad_input(self):
+        """
+        Test exception handling of cadf_test
+        """
+
+        self.assertRaises(TypeError, cadf_test, 'bad input')
+
+    def test_johansen_test_bad_input(self):
+        """
+        Test exception handling of johansen_test
+        """
+
+        self.assertRaises(TypeError, johansen_test, 'bad input')
 
 
 if __name__ == '__main__':
