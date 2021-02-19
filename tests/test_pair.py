@@ -56,6 +56,7 @@ class TestPair(unittest.TestCase):
         """
         Test correctness of Pair.price_spread
         """
+
         shape0 = TestPair.visa.closed.shape[0]
         hedge_ratios1 = np.ones((shape0, 2))
         hedge_ratios2 = np.full((shape0, 2), 2)
