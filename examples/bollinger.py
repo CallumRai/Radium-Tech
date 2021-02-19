@@ -1,32 +1,32 @@
 from radium import Equity, Pair
-from radium.pair import johansen_test, cadf_test
+from radium.pair import cadf_test, johansen_test
 from radium.strategy import BollingerPair
 
-def bollinger():
-    # Alpha-vantage API Key
-    API_KEY = ''
 
-    # Creates equity, pair objects for visa and mastercard 2015-2021
-    visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
-    mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
-    v_ma = Pair(visa, mastercard)
+# Alpha-vantage API Key
+API_KEY = ''
 
-    # Visualise data
-    #v_ma.plot_closed()
+# Creates equity, pair objects for visa and mastercard 2015-2021
+visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
+mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
+v_ma = Pair(visa, mastercard)
 
-    # Test for cointegration
-    cadf_test(v_ma)
-    #johansen_test(v_ma)
+# Visualise data
+v_ma.plot_closed()
 
-    # Backtest Bollinger band strategy on pair
-    entry_z = 1
-    exit_z = 0
-    lookback = 30
-    #v_ma_bollinger = BollingerPair(v_ma, entry_z, exit_z, lookback)
+# Test for cointegration
+cadf_test(v_ma)
+johansen_test(v_ma)
 
-    # Evaluate strategy
-    #sharpe = v_ma_bollinger.sharpe()
-    #ann_returns = v_ma_bollinger.ann_returns()
+# Backtest Bollinger band strategy on pair
+entry_z = 1
+exit_z = 0
+lookback = 30
+v_ma_bollinger = BollingerPair(v_ma, entry_z, exit_z, lookback)
 
-    #print(f"Sharpe ratio: {sharpe}")
-    #print(f"Annualised returns: {ann_returns}")
+# Evaluate strategy
+sharpe = v_ma_bollinger.sharpe()
+ann_returns = v_ma_bollinger.ann_returns()
+
+print(f"Sharpe ratio: {sharpe}")
+print(f"Annualised returns: {ann_returns}")

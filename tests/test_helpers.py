@@ -3,9 +3,10 @@ from radium.helpers import _truncate
 
 class TestTruncate(unittest.TestCase):
     def test_truncate_good_input(self):
-        '''
+        """
         Test correctness of _truncate
-        '''
+        """
+
         known_values = ((1.9999999, 0, 1.0),
                         (1.9999999, 1, 1.9),
                         (1.9999999, 2, 1.99),
@@ -22,16 +23,18 @@ class TestTruncate(unittest.TestCase):
             self.assertEqual(truncated_number, result)
 
     def test_not_integer(self):
-        '''
+        """
         _truncate should fail when decimals not integer
-        '''
+        """
+
         self.assertRaises(TypeError, _truncate, 1.5, 'a')
         self.assertRaises(TypeError, _truncate, 1.5, 1.5)
 
     def test_negative(self):
-        '''
+        """
         _truncate should fail when decimals negative
-        '''
+        """
+
         self.assertRaises(ValueError, _truncate, 11, -1)
         self.assertRaises(ValueError, _truncate, -10, -2)
 

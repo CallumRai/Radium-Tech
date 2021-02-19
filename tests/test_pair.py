@@ -10,7 +10,7 @@ from radium.helpers import _truncate
 class TestPair(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open('tests/api_key.txt') as file:
+        with open('api_key.txt') as file:
             TestPair.API_KEY = file.readline()
 
         TestPair.visa = \
@@ -66,6 +66,7 @@ class TestPair(unittest.TestCase):
         """
         Test correctness of Pair.price_spread
         """
+
         shape0 = TestPair.visa.closed.shape[0]
         hedge_ratios1 = np.ones((shape0, 2))
         hedge_ratios2 = np.full((shape0, 2), 2)

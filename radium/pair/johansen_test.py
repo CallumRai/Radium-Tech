@@ -19,11 +19,11 @@ def johansen_test(pair):
     Raises
     ------
     TypeError
-        If pair isn't radium.Pair
+        If pair is not of type radium.Pair.
     """
 
     if not isinstance(pair, Pair):
-        raise TypeError('pair must be a radium.Pair object')
+        raise TypeError('Pair must be of type radium.Pair')
 
     # Get closed prices in dataframe
     equity1_df = pair.equity1.closed
@@ -56,17 +56,17 @@ def johansen_test(pair):
     for i in [0,1]:
         print(f'r<={i} Trace Statistic = {trace_stat[i]}\n'
               f'r<={i} Trace Critical Values:\n'
-              f'1%: {trace_crit[i][0]}\n'
-              f'5%: {trace_crit[i][1]}\n'
-              f'10% {trace_crit[i][2]}')
+              f'90%: {trace_crit[i][0]}\n'
+              f'95%: {trace_crit[i][1]}\n'
+              f'99% {trace_crit[i][2]}')
 
     print('\n')
 
     for i in [0,1]:
         print(f'r<={i} Eigenvalue Statistic = {eigen_stat[i]}\n'
               f'r<={i} Eigenvalue Critical Values:\n'
-              f'1%: {eigen_crit[i][0]}\n'
-              f'5%: {eigen_crit[i][1]}\n'
-              f'10% {eigen_crit[i][2]}')
+              f'90%: {eigen_crit[i][0]}\n'
+              f'95%: {eigen_crit[i][1]}\n'
+              f'99% {eigen_crit[i][2]}')
 
     print('\n')

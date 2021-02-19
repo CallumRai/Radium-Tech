@@ -1,7 +1,8 @@
 from datetime import datetime
-from ._daily import _daily
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import pandas as pd
+import requests
 
 
 class Equity:
@@ -20,13 +21,17 @@ class Equity:
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
+        # Raises error if date range invalid
+        if end_date <= start_date:
+            raise Exception("End date same as or before start date")
+
         self.symbol = symbol
         self.start_date = start_date
         self.end_date = end_date
         self.key = key
 
         # Fetch all data
-        df = _daily(self)
+        df = self._daily()
 
         # get dates of interest only
         mask = (df.index >= start_date) & (df.index <= end_date)
@@ -43,6 +48,48 @@ class Equity:
         self.low = df["3. low"]
         self.open = df["1. open"]
         self.closed = df["5. adjusted close"]
+
+    def _daily(self):
+
+        """
+        Gets all available daily signals from an equity
+
+        Args:
+            equity: Equity to get data from
+
+        Returns: Dataframe of  daily signals
+        """
+
+        # Get signals in JSON form
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.symbol}&apikey={self.key}" \
+              f"&outputsize=full"
+        json = requests.get(url).json()
+
+        # Put JSON into a pandas dataframe, test for errors
+        try:
+            # If correct data present place time series into list
+            daily_json = json["Time Series (Daily)"]
+        except KeyError:
+            # Test whether an error message is recieved
+            try:
+                # If error message, incorrect symbol used
+                error_json = json["Error Message"]
+                raise TypeError("Equity Symbol does not exist")
+            except KeyError:
+                # Otherwise call limit reached
+                raise RuntimeError("API key invalid or API call limit reached, try again in 1 minute.")
+
+        df = pd.DataFrame(daily_json).T
+
+        # Format data as numerical
+        columns = list(df.columns)
+        for col in columns:
+            df[col] = pd.to_numeric(df[col])
+
+        # Format index as a date
+        df.index = pd.to_datetime(df.index).date
+
+        return df
 
     def plot(self, start_date=None, end_date=None):
         """
