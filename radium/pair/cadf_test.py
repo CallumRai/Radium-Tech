@@ -3,6 +3,7 @@ import statsmodels.tsa.stattools as ts
 
 from .pair import Pair
 
+
 def cadf_test(pair):
     """
     Conducts a Cointegrated Augmented Dickey Fuller Test on a pair of equities 
@@ -46,7 +47,7 @@ def cadf_test(pair):
     crit_value = [round(x, 3) for x in crit_value]
 
     # Print results
-    results = (f'CADF Test for cointegration between {pair.equity1.symbol} ' 
+    results = (f'CADF Test for cointegration between {pair.equity1.symbol} '
                f'and {pair.equity2.symbol} from {pair.start_date} to '
                f'{pair.end_date}\n\n'
                f't-statistic = {coint_t}\n'

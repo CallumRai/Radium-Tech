@@ -56,17 +56,17 @@ def johansen_test(pair):
     for i in [0,1]:
         print(f'r<={i} Trace Statistic = {trace_stat[i]}\n'
               f'r<={i} Trace Critical Values:\n'
-              f'1%: {trace_crit[i][0]}\n'
-              f'5%: {trace_crit[i][1]}\n'
-              f'10% {trace_crit[i][2]}')
+              f'90%: {trace_crit[i][0]}\n'
+              f'95%: {trace_crit[i][1]}\n'
+              f'99% {trace_crit[i][2]}')
 
     print('\n')
 
     for i in [0,1]:
         print(f'r<={i} Eigenvalue Statistic = {eigen_stat[i]}\n'
               f'r<={i} Eigenvalue Critical Values:\n'
-              f'1%: {eigen_crit[i][0]}\n'
-              f'5%: {eigen_crit[i][1]}\n'
-              f'10% {eigen_crit[i][2]}')
+              f'90%: {eigen_crit[i][0]}\n'
+              f'95%: {eigen_crit[i][1]}\n'
+              f'99% {eigen_crit[i][2]}')
 
     print('\n')
