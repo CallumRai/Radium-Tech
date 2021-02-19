@@ -22,5 +22,18 @@ class TestEquity(unittest.TestCase):
         with self.assertRaises(Exception):
             Equity('V', '2015-01-02', '2015-01-01', TestEquity.API_KEY)
 
+    def test_init_bad_symbol(self):
+        """
+        Test error handling of using an invalid symbol in defining equity class
+
+        """
+        with self.assertRaises(TypeError):
+            Equity('asifhj', '2015-01-02', '2015-01-02', TestEquity.API_KEY)
+
+    def test_plot_bad_date(self):
+        """
+        Test error handling of inval
+
+        """
 if __name__ == '__main__':
     unittest.main()

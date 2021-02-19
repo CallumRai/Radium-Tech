@@ -65,11 +65,19 @@ class Equity:
               f"&outputsize=full"
         json = requests.get(url).json()
 
-        # Put JSON into a pandas dataframe, if error API call limit increased
+        # Put JSON into a pandas dataframe, test for errors
         try:
+            # If correct data present place time series into list
             daily_json = json["Time Series (Daily)"]
         except KeyError:
-            raise RuntimeError("API key invalid or API call limit reached, try again in 1 minute.")
+            # Test whether an error message is recieved
+            try:
+                # If error message, incorrect symbol used
+                error_json = json["Error Message"]
+                raise TypeError("Equity Symbol does not exist")
+            except KeyError:
+                # Otherwise call limit reached
+                raise RuntimeError("API key invalid or API call limit reached, try again in 1 minute.")
 
         df = pd.DataFrame(daily_json).T
 
