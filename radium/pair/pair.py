@@ -42,87 +42,93 @@ class Pair:
         self.start_date = equity1.start_date
         self.end_date = equity1.end_date
 
-    def hedge_ols(self, lookback):
+    @property
+    def hedge_ratios(self):
         """
-        Calculate pair hedge ratios by OLS regression. self.equity1 will be used
-        as response variable when regressing.
-
+        np.float[][2]: ndarray of pairs of hedge ratios.
+        
         Parameters
         ----------
-        lookback : int > 0 
-            Number of signals to lookback on when regressing.
-
-        Returns 
-        -------
-        hedge_ratios : np.float[][2] = [[1, -h], ...] 
-            [1, -1*(OLS gradient)] as hedge ratios (y = y1 - h*y2).
+        params : tuple of a string and an integer
+            (method, lookback) where method is a string that determines the 
+            method of calculating hedge_ratios and lookback is an integer that 
+            determines the number of signals to lookback on.
 
         Raises
         ------
         TypeError
-            If lookback isn't an interger.
+            If params isn't a tuple of length 2.
+            If method isn't a string.
+            If lookback isn't an integer.
         ValueError
             If lookback <= 0.
+            If method isn't available.
+
+        Notes
+        -----
+        Available method strings: 'OLS'.
         """
 
+        return self._hedge_ratios
+
+    @hedge_ratios.setter
+    def hedge_ratios(self, params):
+
+        # Exception handling of params
+        if not isinstance(params, tuple):
+            raise TypeError('params must be a tuple')
+        elif len(params) != 2:
+            raise TypeError('params must be a tuple of length 2')
+
+        # Unpack params
+        (method, lookback) = params
+
+        # Exception handling of method
+        if not isinstance(method, str):
+            raise TypeError('method must be a string')
+        
+        # Exception handling of lookback
         if not isinstance(lookback, int):
             raise TypeError('lookback must be an integer.')
         elif lookback <= 0:
             raise ValueError('lookback must be > 0')
 
-        # Construct dataframe of closed prices
-        df = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
-        df.columns = [self.equity1.symbol, self.equity2.symbol]
+        # Calculate hedge ratios based on the method provided
+        if method == 'OLS':
+            self._hedge_ratios = self._hedge_ols(lookback)
+        else:
+            raise ValueError('Available method strings: "OLS"')
 
-        # Get ols regression result for each date
-        hedge_ratios = np.zeros(df.shape)
-        for i in range(lookback, hedge_ratios.shape[0]):
-            formula = f"{self.equity1.symbol} ~ {self.equity2.symbol}"
-            df_lookback = df[(i - lookback):i]
-            ols = sm.ols(formula, df_lookback).fit()
 
-            # Hedge ratio for equity2 is -1*(OLS gradient)
-            hedge_ratios[i - 1][0] = 1
-            hedge_ratios[i - 1][1] = -1 * ols.params[1]
-
-        return hedge_ratios
-
-    def price_spread(self, hedge_ratios):
+    @property
+    def price_spread(self):
         """
-        Calculate price spread of equities for given hedge_ratios.
-
-        Parameters
-        ----------
-        hedge_ratios : np.float[][2]
-
-        Returns
-        -------
-        spread : np.float[]
-            Spread calculated using y = h1*y1 + h2*y2.
+        np.float[]: ndarray of price spread of equities for self.hedge_ratios.
 
         Raises
         ------
         TypeError
-            If hedge_ratios isn't a 2D ndarray with same number of entries
-            as equity.closed.
+            If self.hedge_ratios isn't defined.
+
+        Notes
+        -----
+        Spread calculated using y = h1*y1 + h2*y2.
         """
 
-        if not isinstance(hedge_ratios, np.ndarray):
-            raise TypeError('hedge_ratios must be of type np.ndarray')
-        elif hedge_ratios.shape[1] != 2:
-            raise TypeError('hedge_ratios must be a 2D array')
-        elif hedge_ratios.shape[0] != self.equity1.closed.shape[0]:
-            msg = 'hedge_ratios.shape[0] !=  equity1.closed.shape[0]'
-            raise TypeError("hedge ratios not of same size as equity price entries")
+        if hasattr(self, '_hedge_ratios') == False:
+            raise Exception('Pair.hedge_ratios is not defined.')
 
-        # Construct dataframe of closed prices
-        prices = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
-        prices.columns = [self.equity1.symbol, self.equity2.symbol]
+        # Calculate price_spread if undefined
+        if hasattr(self, '_price_spread') == False:
+            # Construct dataframe of closed prices
+            prices = pd.concat([self.equity1.closed, self.equity2.closed],
+                                axis=1)
+            prices.columns = [self.equity1.symbol, self.equity2.symbol]
 
-        # Multiply and add for each date
-        spread = np.sum(hedge_ratios * prices, axis=1)
+            # Multiply and add for each date
+            self._price_spread = np.sum(self.hedge_ratios * prices, axis=1)
 
-        return spread
+        return self._price_spread
 
     def budget(self, hedge_ratio, dec):
         """
@@ -256,3 +262,36 @@ class Pair:
         plt.legend()
         plt.grid()
         plt.show()
+
+    def _hedge_ols(self, lookback):
+        """
+        Calculate pair hedge ratios by OLS regression. self.equity1 will be used
+        as response variable when regressing.
+
+        Parameters
+        ----------
+        lookback : int > 0 
+            Number of signals to lookback on when regressing.
+
+        Returns 
+        -------
+        hedge_ratios : np.float[][2] = [[1, -h], ...] 
+            [1, -1*(OLS gradient)] as hedge ratios (y = y1 - h*y2).
+        """
+
+        # Construct dataframe of closed prices
+        df = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
+        df.columns = [self.equity1.symbol, self.equity2.symbol]
+
+        # Get ols regression result for each date
+        hedge_ratios = np.zeros(df.shape)
+        for i in range(lookback, hedge_ratios.shape[0]):
+            formula = f"{self.equity1.symbol} ~ {self.equity2.symbol}"
+            df_lookback = df[(i - lookback):i]
+            ols = sm.ols(formula, df_lookback).fit()
+
+            # Hedge ratio for equity2 is -1*(OLS gradient)
+            hedge_ratios[i - 1][0] = 1
+            hedge_ratios[i - 1][1] = -1*ols.params[1]
+
+        return hedge_ratios
