@@ -4,6 +4,7 @@ import pandas as pd
 from radium import Pair
 from radium.helpers import _truncate
 
+
 class PairStrategy:
     """
     Base class for equity pair trading strategies.

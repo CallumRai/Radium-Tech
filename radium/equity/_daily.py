@@ -22,7 +22,8 @@ def _daily(equity):
     try:
         daily_json = json["Time Series (Daily)"]
     except KeyError:
-        raise Exception("API call limit reached, try again in 1 minute.")
+        raise RuntimeError("API key invalid or API call limit reached, try again in 1 minute.")
+
     df = pd.DataFrame(daily_json).T
 
     # Format data as numerical

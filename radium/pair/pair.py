@@ -108,12 +108,12 @@ class Pair:
         """
 
         if not isinstance(hedge_ratios, np.ndarray):
-            raise TypeError('hedge_ratios needs to be an np.ndarray')
+            raise TypeError('hedge_ratios must be of type np.ndarray')
         elif hedge_ratios.shape[1] != 2:
-            raise TypeError('hedge_ratios needs to be an 2D np.ndarray')
+            raise TypeError('hedge_ratios must be a 2D array')
         elif hedge_ratios.shape[0] != self.equity1.closed.shape[0]:
             msg = 'hedge_ratios.shape[0] !=  equity1.closed.shape[0]'
-            raise TypeError(msg)
+            raise TypeError("hedge ratios not of same size as equity price entries")
 
         # Construct dataframe of closed prices
         prices = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)

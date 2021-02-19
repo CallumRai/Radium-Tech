@@ -20,6 +20,10 @@ class Equity:
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
+        # Raises error if date range invalid
+        if end_date <= start_date:
+            raise Exception("End date same as or before start date")
+
         self.symbol = symbol
         self.start_date = start_date
         self.end_date = end_date
