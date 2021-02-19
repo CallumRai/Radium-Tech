@@ -19,11 +19,11 @@ def cadf_test(pair):
     Raises
     ------
     TypeError
-        If pair isn't radium.Pair.
+        If pair is not of type radium.Pair.
     """
 
     if not isinstance(pair, Pair):
-        raise TypeError('pair must be a radium.Pair object')
+        raise TypeError('Pair must be of type radium.Pair')
 
     # Get closed prices in dataframe
     equity1_df = pair.equity1.closed

@@ -28,14 +28,14 @@ class Pair:
     Raises
     ------
     TypeError
-        If equity1 or equity2 isnt radium.Equity.
+        If equity1 or equity2 is not of type radium.Equity.
     """
 
     def __init__(self, equity1, equity2):
         if not isinstance(equity1, Equity):
-            raise TypeError('equity1 must be an Equity object')
+            raise TypeError('equity1 must of type radium.Equity')
         elif not isinstance(equity2, Equity):
-            raise TypeError('equity2 must be an Equity object')
+            raise TypeError('equity2 must of type radium.Equity')
 
         self.equity1 = equity1
         self.equity2 = equity2
