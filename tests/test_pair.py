@@ -8,7 +8,6 @@ from radium.helpers import _truncate
 
 
 class TestPair(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         with open('tests/api_key.txt') as file:
