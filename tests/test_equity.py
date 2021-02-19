@@ -1,19 +1,26 @@
 import unittest
-from radium.equity import *
+from radium import Equity
 
 
 class TestEquity(unittest.TestCase):
-    def setUp(self):
-        visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
 
-    def test_default(self):
+    @classmethod
+    def setUpClass(cls):
+        with open('tests/api_key.txt') as file:
+            TestEquity.API_KEY = file.readline()
+
+        TestEquity.visa = Equity('V', '2015-01-01', '2021-01-01', TestEquity.API_KEY)
+
+    def test_init_bad_date(self):
         """
-        Returns: Conducts useless test to ensure setUp runs checks for no exceptions thrown
+        Test error handling of end_date being before or some as start_date in defining equity class
 
         """
+        with self.assertRaises(Exception):
+            Equity('V', '2015-01-02', '2015-01-02', TestEquity.API_KEY)
 
-        self.assertTrue(True)
-
+        with self.assertRaises(Exception):
+            Equity('V', '2015-01-02', '2015-01-01', TestEquity.API_KEY)
 
 if __name__ == '__main__':
     unittest.main()
