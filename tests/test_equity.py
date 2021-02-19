@@ -6,7 +6,7 @@ class TestEquity(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open('tests/api_key.txt') as file:
+        with open('api_key.txt') as file:
             TestEquity.API_KEY = file.readline()
 
         TestEquity.visa = Equity('V', '2015-01-01', '2021-01-01', TestEquity.API_KEY)
