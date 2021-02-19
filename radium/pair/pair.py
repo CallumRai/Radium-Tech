@@ -75,7 +75,7 @@ class Pair:
     def hedge_ratios(self, params):
 
         # Exception handling of params
-        if not isintance(params, tuple):
+        if not isinstance(params, tuple):
             raise TypeError('params must be a tuple')
         elif len(params) != 2:
             raise TypeError('params must be a tuple of length 2')
@@ -95,7 +95,7 @@ class Pair:
 
         # Calculate hedge ratios based on the method provided
         if method == 'OLS':
-            self._hedge_ratios = _self.hedge_ols(lookback)
+            self._hedge_ratios = self._hedge_ols(lookback)
         else:
             raise ValueError('Available method strings: "OLS"')
 
