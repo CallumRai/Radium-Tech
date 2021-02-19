@@ -42,6 +42,64 @@ class Pair:
         self.start_date = equity1.start_date
         self.end_date = equity1.end_date
 
+    @property
+    def hedge_ratios(self):
+        """
+        np.float[][2]: ndarray of pairs of hedge ratios.
+        
+        Parameters
+        ----------
+        params : tuple of a string and an integer
+            (method, lookback) where method is a string that determines the 
+            method of calculating hedge_ratios and lookback is an integer that 
+            determines the number of signals to lookback on.
+
+        Raises
+        ------
+        TypeError
+            If params isn't a tuple of length 2,
+            If method isn't a string
+            If lookback isn't an integer.
+        ValueError
+            If lookback <= 0.
+            If method isn't available
+
+        Notes
+        -----
+        Available method strings: 'OLS'
+        """
+
+        return self._hedge_ratios
+
+    @hedge_ratios.setter
+    def hedge_ratios(self, params):
+
+        # Exception handling of params
+        if not isintance(params, tuple):
+            raise TypeError('params must be a tuple')
+        elif len(params) != 2:
+            raise TypeError('params must be a tuple of length 2')
+
+        # Unpack params
+        (method, lookback) = params
+
+        # Exception handling of method
+        if not isinstance(method, str):
+            raise TypeError('method must be a string')
+        
+        # Exception handling of lookback
+        if not isinstance(lookback, int):
+            raise TypeError('lookback must be an integer.')
+        elif lookback <= 0 :
+            raise ValueError('lookback must be > 0')
+
+        # Calculate hedge ratios based on the method provided
+        if method == 'OLS':
+            self._hedge_ratios = self.hedge_ols(lookback)
+        else:
+            raise ValueError('Available method strings: "OLS"')
+
+
     def hedge_ols(self, lookback):
         """
         Calculate pair hedge ratios by OLS regression. self.equity1 will be used
@@ -56,15 +114,9 @@ class Pair:
         -------
         hedge_ratios : np.float[][2] = [[1, -h], ...] 
             [1, -1*(OLS gradient)] as hedge ratios (y = y1 - h*y2).
-
-        Raises
-        ------
-        TypeError
-            If lookback isn't an interger.
-        ValueError
-            If lookback <= 0.
         """
 
+        #Exception handling of lookback
         if not isinstance(lookback, int):
             raise TypeError('lookback must be an integer.')
         elif lookback <= 0 :
