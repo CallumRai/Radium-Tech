@@ -11,7 +11,7 @@ class TestPair(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open('tests/api_key.txt') as file:
+        with open('api_key.txt') as file:
             TestPair.API_KEY = file.readline()
 
         TestPair.visa = \
