@@ -3,11 +3,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import statsmodels.tsa.stattools as ts
 import statsmodels.formula.api as sm
 
 from radium import Equity
 from radium.helpers import _truncate
+
 
 class Pair:
     """
@@ -67,7 +67,7 @@ class Pair:
 
         if not isinstance(lookback, int):
             raise TypeError('lookback must be an integer.')
-        elif lookback <= 0 :
+        elif lookback <= 0:
             raise ValueError('lookback must be > 0')
 
         # Construct dataframe of closed prices
@@ -83,7 +83,7 @@ class Pair:
 
             # Hedge ratio for equity2 is -1*(OLS gradient)
             hedge_ratios[i - 1][0] = 1
-            hedge_ratios[i - 1][1] = -1*ols.params[1]
+            hedge_ratios[i - 1][1] = -1 * ols.params[1]
 
         return hedge_ratios
 
@@ -170,8 +170,8 @@ class Pair:
         truncated_ratios = np.array([_truncate(n, dec) for n in hedge_ratio])
 
         # Calculate budget to buy integer number of equites
-        budget = equity1_price * abs(truncated_ratios[0]) * 10**dec \
-                + equity2_price * abs(truncated_ratios[1]) * 10**dec
+        budget = equity1_price * abs(truncated_ratios[0]) * 10 ** dec \
+                 + equity2_price * abs(truncated_ratios[1]) * 10 ** dec
 
         # Truncated budget to 2 decimals places
         budget = _truncate(budget, 2)
@@ -208,14 +208,14 @@ class Pair:
         # Exception Handling
         if not isinstance(start_date, date):
             try:
-                start_date = datetime.strptime(start_date, "%Y-%m-%d").date() 
+                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
             except:
                 msg = 'start_date must be datetime.date or "YYYY-MM-DD"'
                 raise TypeError(msg)
 
         if not isinstance(end_date, date):
             try:
-                end_date = datetime.strptime(end_date, "%Y-%m-%d").date() 
+                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
             except:
                 msg = 'end_date must be datetime.date or "YYYY-MM-DD"'
                 raise TypeError(msg)
@@ -231,17 +231,17 @@ class Pair:
         # Gets required range only for both equities
         equity1_closed = self.equity1.closed
         mask = (equity1_closed.index >= start_date) \
-                & (equity1_closed.index <= end_date)
+               & (equity1_closed.index <= end_date)
         equity1_closed = equity1_closed.loc[mask]
 
         equity2_closed = self.equity2.closed
         mask = (equity2_closed.index >= start_date) \
-                & (equity2_closed.index <= end_date)
+               & (equity2_closed.index <= end_date)
         equity2_closed = equity2_closed.loc[mask]
 
         fig, ax = plt.subplots()
-        plt.plot(equity1_closed, label = self.equity1.symbol)
-        plt.plot(equity2_closed, label = self.equity2.symbol)
+        plt.plot(equity1_closed, label=self.equity1.symbol)
+        plt.plot(equity2_closed, label=self.equity2.symbol)
 
         title = (f'{self.equity1.symbol} and {self.equity2.symbol} '
                  f'from {start_date} to {end_date}')

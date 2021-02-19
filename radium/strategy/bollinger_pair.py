@@ -1,4 +1,4 @@
-from .strategy import Strategy
+from .pair_strategy import PairStrategy
 import numpy as np
 import statsmodels.tsa.stattools as ts
 import pandas as pd
