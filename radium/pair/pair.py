@@ -57,16 +57,16 @@ class Pair:
         Raises
         ------
         TypeError
-            If params isn't a tuple of length 2,
-            If method isn't a string
+            If params isn't a tuple of length 2.
+            If method isn't a string.
             If lookback isn't an integer.
         ValueError
             If lookback <= 0.
-            If method isn't available
+            If method isn't available.
 
         Notes
         -----
-        Available method strings: 'OLS'
+        Available method strings: 'OLS'.
         """
 
         return self._hedge_ratios
@@ -99,42 +99,35 @@ class Pair:
         else:
             raise ValueError('Available method strings: "OLS"')
 
-    def price_spread(self, hedge_ratios):
+    @property
+    def price_spread(self):
         """
-        Calculate price spread of equities for given hedge_ratios.
-
-        Parameters
-        ----------
-        hedge_ratios : np.float[][2]
-
-        Returns
-        -------
-        spread : np.float[]
-            Spread calculated using y = h1*y1 + h2*y2.
+        np.float[]: ndarray of price spread of equities for self.hedge_ratios.
 
         Raises
         ------
         TypeError
-            If hedge_ratios isn't a 2D ndarray with same number of entries
-            as equity.closed.
+            If self.hedge_ratios isn't defined.
+
+        Notes
+        -----
+        Spread calculated using y = h1*y1 + h2*y2.
         """
 
-        if not isinstance(hedge_ratios, np.ndarray):
-            raise TypeError('hedge_ratios needs to be an np.ndarray')
-        elif hedge_ratios.shape[1] != 2:
-            raise TypeError('hedge_ratios needs to be an 2D np.ndarray')
-        elif hedge_ratios.shape[0] != self.equity1.closed.shape[0]:
-            msg = 'hedge_ratios.shape[0] !=  equity1.closed.shape[0]'
-            raise TypeError(msg)
+        if hasattr(self, '_hedge_ratios') == False:
+            raise Exception('Pair.hedge_ratios is not defined.')
 
-        # Construct dataframe of closed prices
-        prices = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
-        prices.columns = [self.equity1.symbol, self.equity2.symbol]
+        # Calculate price_spread if undefined
+        if hasattr(self, '_price_spread') == False:
+            # Construct dataframe of closed prices
+            prices = pd.concat([self.equity1.closed, self.equity2.closed],
+                                axis=1)
+            prices.columns = [self.equity1.symbol, self.equity2.symbol]
 
-        # Multiply and add for each date
-        spread = np.sum(hedge_ratios * prices, axis=1)
+            # Multiply and add for each date
+            self._price_spread = np.sum(self.hedge_ratios * prices, axis=1)
 
-        return spread
+        return self._price_spread
 
     def budget(self, hedge_ratio, dec):
         """

@@ -86,31 +86,19 @@ class TestPair(unittest.TestCase):
                         (hedge_ratios6, -207.14))
 
         for hedge_ratios, spread in known_values:
-            result = TestPair.V_MA.price_spread(hedge_ratios)
-            truncated_last_result = _truncate(result[0], 2)
-            self.assertEqual(spread, truncated_last_result)
+            TestPair.V_MA._hedge_ratios = hedge_ratios
+            self.assertEqual(spread,
+                             _truncate(TestPair.V_MA.price_spread[0], 2))
+            del TestPair.V_MA._price_spread
 
     def test_price_spread_bad_input(self):
         """
         Test exception handling of Pair.price_spread
         """
 
-        self.assertRaises(TypeError, TestPair.V_MA.price_spread, [])
-        self.assertRaises(TypeError, TestPair.V_MA.price_spread, [[1, -0.5]])
-
-        # Raise TypeError when hedge_ratios.shape[0] != equity1.closed.shape[0]
-        self.assertRaises(TypeError,
-                          TestPair.V_MA.price_spread,
-                          np.ones((10, 2)))
-
-        # Raise TypeError when hedge_ratios.shape[1] != 2
-        shape0 = TestPair.visa.closed.shape[0]
-        self.assertRaises(TypeError,
-                          TestPair.V_MA.price_spread,
-                          np.ones((shape0, 1)))
-        self.assertRaises(TypeError,
-                          TestPair.V_MA.price_spread,
-                          np.ones((shape0, 3)))
+        del TestPair.V_MA._hedge_ratios
+        with self.assertRaises(Exception):
+            TestPair.V_MA.price_spread
 
     def test_budget_good_input(self):
         """
