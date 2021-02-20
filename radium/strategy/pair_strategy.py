@@ -7,14 +7,12 @@ class PairStrategy:
     """
     Base class for equity pair trading strategies.
 
+    The positions and th_positions properties will be defined in the child class
+
     Attributes
     ----------
-    positions : np.int[][2]
-        Number of equities long/short each day.
-    th_positions : np.float[][2]
-        Theoretical unrounded number of equities long/short each day.
-    th_daily_returns : np.float[]
-        Theoretical daily returns without budget restrains/costs.
+    th_positions
+    th_daily_returns
     th_annualised_returns : float
         Theoretical geometric average amount of money earned by an investment
         each year over a given time period.
@@ -41,6 +39,25 @@ class PairStrategy:
         if not isinstance(pair, Pair):
             raise TypeError('pair must be an radium.Pair object')
         self.pair = pair
+
+    @property
+    def th_positions(self):
+        """
+        np.float[][2] : Theoretical unrounded number of equities long/short each
+                        day.
+
+        Will be overridden in the child class.
+        """
+        return self._th_positions
+
+    @property
+    def th_daily_returns(self):
+        """
+        np.float[]: Theoretical daily returns without budget restrains/costs.
+
+        Will be overridden in the child class.
+        """
+        return self._th_daily_returns
 
     def th_returns(self):
         """

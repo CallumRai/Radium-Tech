@@ -102,7 +102,6 @@ class Pair:
         else:
             raise ValueError('Available method strings: "OLS"')
 
-
     @property
     def price_spread(self):
         """
