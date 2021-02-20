@@ -5,11 +5,12 @@ from datetime import datetime
 
 class TestEquity(unittest.TestCase):
 
-    def setUp(self) -> None:
+    @classmethod
+    def setUpClass(cls):
         with open('api_key.txt') as file:
-            self.API_KEY = file.readline()
+            cls.API_KEY = file.readline()
 
-        self.visa = Equity('V', '2015-01-01', '2015-03-01', self.API_KEY)
+        cls.visa = Equity('V', '2015-01-01', '2015-03-01', cls.API_KEY)
 
     def test_init_bad_date(self):
         """
