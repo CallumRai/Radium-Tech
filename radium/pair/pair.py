@@ -13,6 +13,8 @@ class Pair:
     """
     Attributes
     ----------
+    hedge_ratios
+    price_spread
     equity1 : radium.Equity
     equity2 : radium.Equity
     start_date : datetime.date
