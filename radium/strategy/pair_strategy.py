@@ -3,14 +3,9 @@ import pandas as pd
 
 from radium import Pair
 
-
 class PairStrategy:
     """
     Base class for equity pair trading strategies.
-
-    Parameters
-    ----------
-    pair : radium.Pair
 
     Attributes
     ----------
@@ -27,14 +22,21 @@ class PairStrategy:
     th_max_drawdown : float
     th_max_drawdown_duration : int
         Number of days maximum drawdown lasted.
-
-    Raises
-    ------
-    TypeError
-        If pair isn't radium.Pair.
     """
 
     def __init__(self, pair):
+        """
+        Initialises PairStrategy class
+
+        Parameters
+        ----------
+        pair : radium.Pair
+
+        Raises
+        ------
+        TypeError
+            If pair isn't radium.Pair.
+        """
         # Exception handling
         if not isinstance(pair, Pair):
             raise TypeError('pair must be an radium.Pair object')
