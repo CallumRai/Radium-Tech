@@ -13,7 +13,7 @@ class TestEquity(unittest.TestCase):
 
     def test_init_bad_date(self):
         """
-        Test error handling of end_date being before or some as start_date in defining equity class
+        Test error handling of end_date being <= start_date in equity.__init__
 
         """
 
@@ -64,10 +64,15 @@ class TestEquity(unittest.TestCase):
         for i in range(2):
             date = dates[i]
 
-            self.assertEqual(high[i], self.visa.high[self.visa.high.index == date].item())
-            self.assertEqual(low[i], self.visa.low[self.visa.low.index == date].item())
-            self.assertEqual(open[i], self.visa.open[self.visa.open.index == date].item())
-            self.assertEqual(closed[i], self.visa.closed[self.visa.closed.index == date].item())
+            self.assertEqual(
+                high[i], self.visa.high[self.visa.high.index == date].item())
+            self.assertEqual(
+                low[i], self.visa.low[self.visa.low.index == date].item())
+            self.assertEqual(
+                open[i], self.visa.open[self.visa.open.index == date].item())
+            self.assertEqual(
+                closed[i],
+                self.visa.closed[self.visa.closed.index == date].item())
 
 
 if __name__ == '__main__':
