@@ -13,7 +13,7 @@ class PairStrategy:
     ----------
     th_positions
     th_daily_returns
-    th_cum_returns
+    cum_returns
     th_annualised_returns : float
         Theoretical geometric average amount of money earned by an investment
         each year over a given time period.
@@ -50,6 +50,12 @@ class PairStrategy:
         Will be overridden in the child class.
         """
         return self._th_positions
+
+    @property
+    def daily_returns(self):
+        self._daily_returns = self.th_daily_returns
+
+        return self._daily_returns
 
     @property
     def th_daily_returns(self):
@@ -95,30 +101,29 @@ class PairStrategy:
         return self._th_daily_returns
 
     @property
-    def th_cum_returns(self):
+    def cum_returns(self):
         """
         np.float[]: ndarray of cumulative returns of the strategy
 
-        Calculates theoretical daily cumulative returns withouth budget
-        restrains/costs.
+        Calculates daily cumulative returns 
 
         Raises
         ------
         Exception
-            If self.th_daily_returns is not defined
+            If self.th_positions is not defined
         """
         
-        if hasattr(self, '_th_daily_returns') == False:
-            raise Exception('PairStrategy.th_daily_returns is not defined')
-
         # Calculate th_cum_returns if undefined
-        if hasattr(self, '_th_cum_returns') == False:
-            ret = self.th_daily_returns
-            cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
-            cum_ret.fillna(method='ffill', inplace=True)
-            self._th_cum_returns = cum_ret.to_numpy()
+        if hasattr(self, '_cum_returns') == False:
+            #TODO: Determine 252vs365 days
+            #ret = self.daily_returns
+            #cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
+            #cum_ret.fillna(method='ffill', inplace=True)
+            #self._cum_returns = cum_ret.to_numpy()
 
-        return self._th_cum_returns
+            self._cum_returns = np.cumprod(1 + self.daily_returns) - 1
+
+        return self._cum_returns
 
     def ann_returns(self):
         """
