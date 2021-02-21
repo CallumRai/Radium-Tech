@@ -22,6 +22,21 @@ class TestPairStrategy(unittest.TestCase):
 
         self.assertRaises(TypeError, PairStrategy, 'not pair')
 
+    def test_th_daily_returns_bad_input(self):
+        """
+        Test exception handling of PairStrategy.th_daily_returns property
+        """
+
+        with self.assertRaises(Exception):
+            TestPairStrategy.strategy.th_daily_returns
+
+    def test_th_cum_returns_bad_input(self):
+        """
+        Test exception handling of PairStrategy.cum_returns property 
+        """
+        with self.assertRaises(Exception):
+            TestPairStrategy.strategy.cum_returns
+
 
 if __name__ == '__main__':
     unittest.main()
