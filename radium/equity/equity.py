@@ -37,8 +37,11 @@ class Equity:
         mask = (df.index >= start_date) & (df.index <= end_date)
         df = df.loc[mask]
 
+        # Change order of dates from earliest to olders
+        df.sort_index(ascending=True, inplace=True)
+
         # Fill missing data with previous data
-        df.fillna(method='ffill')
+        #df.fillna(method='ffill')
 
         # Set data attribute
         self.data = df
