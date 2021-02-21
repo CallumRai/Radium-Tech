@@ -7,26 +7,27 @@ from radium.strategy import BollingerPair
 API_KEY = ''
 
 # Creates equity, pair objects for visa and mastercard 2015-2021
-visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
-mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
-v_ma = Pair(visa, mastercard)
+MRO = Equity('MRO', '2016-01-01', '2021-01-01', API_KEY)
+NAVI = Equity('NAVI', '2016-01-01', '2021-01-01', API_KEY)
+MRO_NAVI = Pair(MRO, NAVI)
 
 # Visualise data
-v_ma.plot_closed()
+MRO_NAVI.plot_closed()
 
 # Test for cointegration
-cadf_test(v_ma)
-johansen_test(v_ma)
+cadf_test(MRO_NAVI)
+johansen_test(MRO_NAVI)
 
 # Backtest Bollinger band strategy on pair
 entry_z = 1
 exit_z = 0
 lookback = 30
-v_ma_bollinger = BollingerPair(v_ma, entry_z, exit_z, lookback)
+bollinger = BollingerPair(MRO_NAVI, entry_z, exit_z, lookback)
 
 # Evaluate strategy
-sharpe = v_ma_bollinger.sharpe()
-ann_returns = v_ma_bollinger.ann_returns()
+positions = bollinger.th_positions
+sharpe = bollinger.sharpe()
+ann_returns = bollinger.ann_returns()
 
 print(f"Sharpe ratio: {sharpe}")
 print(f"Annualised returns: {ann_returns}")
