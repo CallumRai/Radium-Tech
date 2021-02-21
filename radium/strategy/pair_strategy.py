@@ -13,6 +13,7 @@ class PairStrategy:
     ----------
     th_positions
     th_daily_returns
+    th_cum_returns
     th_annualised_returns : float
         Theoretical geometric average amount of money earned by an investment
         each year over a given time period.
@@ -86,23 +87,38 @@ class PairStrategy:
             pnl = np.sum(position_values.shift().values * close_pct_change,
                          axis=1)
 
-            # Calculate return
+            # Calculate total position values the day before
             total_position_values = np.sum(np.abs(position_values.shift()),
                                            axis=1)
             self._th_daily_returns = pnl / total_position_values  
 
         return self._th_daily_returns
 
-    def cum_returns(self):
+    @property
+    def th_cum_returns(self):
         """
-        Returns: Cumulative returns as array
+        np.float[]: ndarray of cumulative returns of the strategy
 
+        Calculates theoretical daily cumulative returns withouth budget
+        restrains/costs.
+
+        Raises
+        ------
+        Exception
+            If self.th_daily_returns is not defined
         """
-        ret = self.th_daily_returns
-        cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
-        cum_ret.fillna(method='ffill', inplace=True)
+        
+        if hasattr(self, '_th_daily_returns') == False:
+            raise Exception('PairStrategy.th_daily_returns is not defined')
 
-        return cum_ret.values.flatten()
+        # Calculate th_cum_returns if undefined
+        if hasattr(self, '_th_cum_returns') == False:
+            ret = self.th_daily_returns
+            cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
+            cum_ret.fillna(method='ffill', inplace=True)
+            self._th_cum_returns = cum_ret.to_numpy()
+
+        return self._th_cum_returns
 
     def ann_returns(self):
         """
