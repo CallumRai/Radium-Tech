@@ -30,12 +30,21 @@ class TestPairStrategy(unittest.TestCase):
         with self.assertRaises(Exception):
             TestPairStrategy.strategy.th_daily_returns
 
-    def test_th_cum_returns_bad_input(self):
+    def test_cum_returns_bad_input(self):
         """
         Test exception handling of PairStrategy.cum_returns property 
         """
+
         with self.assertRaises(Exception):
             TestPairStrategy.strategy.cum_returns
+
+    def test_CAGR_bad_input(self):
+        """
+        Test excpetion handling of PairStrategy.CAGR property
+        """
+
+        with self.assertRaises(Exception):
+            TestPairStrategy.strategy.CAGR
 
 
 if __name__ == '__main__':

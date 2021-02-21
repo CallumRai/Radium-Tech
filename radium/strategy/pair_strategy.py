@@ -103,7 +103,7 @@ class PairStrategy:
     @property
     def cum_returns(self):
         """
-        np.float[]: ndarray of cumulative returns of the strategy
+        np.float[]: ndarray of daily cumulative returns of the strategy
 
         Calculates daily cumulative returns 
 
@@ -113,7 +113,7 @@ class PairStrategy:
             If self.th_positions is not defined
         """
         
-        # Calculate th_cum_returns if undefined
+        # Calculate cum_returns if undefined
         if hasattr(self, '_cum_returns') == False:
             #TODO: Determine 252vs365 days
             #ret = self.daily_returns
@@ -125,22 +125,32 @@ class PairStrategy:
 
         return self._cum_returns
 
-    def ann_returns(self):
+    @property
+    def CAGR(self):
         """
-        Returns: Annualised returns
+        float: Compound Annual Growth Rate
 
+        Calculates CAGR using daily cumulative returns
+
+        Raises
+        ------
+        Exception
+            If self.th_positions is not defined
         """
-        start_date = self.pair.start_date
-        end_date = self.pair.end_date
 
-        days = (end_date - start_date).days
-        days = int(days)
+        #Calculate CAGR if undefined
+        if hasattr(self, '_CAGR') == False:
+            start_date = self.pair.start_date
+            end_date = self.pair.end_date
 
-        cum_returns = self.cum_returns()
-        final_cum = cum_returns[-1]
+            days = (end_date - start_date).days
+            days = int(days)
 
-        ann_return = (1 + final_cum) ** (365 / days) - 1
-        return ann_return
+            final_cum_return = self.cum_returns[-1]
+
+            self._CAGR = (1 + final_cum_return) ** (365 / days) - 1
+
+        return self._CAGR
 
     def sharpe(self):
         """
