@@ -58,28 +58,6 @@ class PairStrategy:
         return self._daily_returns
 
     @property
-    def th_daily_pnl(self):
-        if hasattr(self, '_th_positions') == False:
-            raise Exception('PairStrategy.th_positions is not defined')
-
-        # Calculate th_daily_pnl if undefined
-        if hasattr(self, '_th_daily_pnl') == False:
-            # Get closed prices
-            prices = pd.concat(
-                [self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
-
-            positions = pd.DataFrame(self.th_positions,
-                                     index=self.pair.equity1.data.index)
-
-            # Calculate P&L with % change of close price and positions
-            pnl = np.sum(positions.shift().values * prices.diff(),
-                         axis=1)
-            print(pnl)
-            self._th_daily_pnl = pnl
-
-        return self._th_daily_pnl
-
-    @property
     def th_daily_returns(self):
         """
         np.float[]: ndarray of daily returns 
