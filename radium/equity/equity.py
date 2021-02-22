@@ -25,6 +25,10 @@ class Equity:
         if end_date <= start_date:
             raise Exception("End date same as or before start date")
 
+        # Raises error if key is empty string
+        if not isinstance(key, str) and len(key) > 0:
+            raise TypeError("Invalid API Key")
+
         self.symbol = symbol
         self.start_date = start_date
         self.end_date = end_date
@@ -77,7 +81,7 @@ class Equity:
                 raise TypeError("Equity Symbol does not exist")
             except KeyError:
                 # Otherwise call limit reached
-                raise RuntimeError("API key invalid or API call limit reached, try again in 1 minute.")
+                raise RuntimeError("API call limit reached, try again in 1 minute.")
 
         df = pd.DataFrame(daily_json).T
 

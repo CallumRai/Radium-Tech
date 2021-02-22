@@ -5,6 +5,7 @@ from radium import Pair, Equity
 from radium.strategy import PairStrategy
 from radium.helpers import _truncate
 
+
 class TestPairStrategy(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -54,23 +55,23 @@ class TestPairStrategy(unittest.TestCase):
         days = self.visa.closed.values.shape[0]
 
         # Hedge_ratios = [[1,0], [1,0], ...]
-        visa_CAGR = (visa_final / visa_start)**(1/6) - 1
-        th_positions = np.tile([1,0], (days, 1))
+        visa_CAGR = (visa_final / visa_start) ** (1 / 6) - 1
+        th_positions = np.tile([1, 0], (days, 1))
         self.strategy._th_positions = th_positions
         strategy_CAGR = self.strategy.CAGR
         self.assertEqual(_truncate(visa_CAGR, 3),
-                         _truncate(self.strategy.CAGR, 3)) 
+                         _truncate(self.strategy.CAGR, 3))
 
         del self.strategy._th_daily_returns
         del self.strategy._cum_returns
         del self.strategy._CAGR
 
         # Hedge_ratios = [[0,1], [0,1], ...]
-        mastercard_CAGR = (mastercard_final/mastercard_start)**(1/6) - 1
-        th_positions = np.tile([0,1], (days, 1))
+        mastercard_CAGR = (mastercard_final / mastercard_start) ** (1 / 6) - 1
+        th_positions = np.tile([0, 1], (days, 1))
         self.strategy._th_positions = th_positions
         self.assertEqual(_truncate(mastercard_CAGR, 3),
-                         _truncate(self.strategy.CAGR, 3)) 
+                         _truncate(self.strategy.CAGR, 3))
 
         del self.strategy._th_daily_returns
         del self.strategy._cum_returns
@@ -79,40 +80,40 @@ class TestPairStrategy(unittest.TestCase):
         # Hedge_ratios = [[1,1], [1,1], ...]
         portfolio_start = visa_start + mastercard_start
         portfolio_final = visa_final + mastercard_final
-        portfolio_CAGR = (portfolio_final/portfolio_start)**(1/6) - 1
-        th_positions = np.tile([1,1], (days, 1))
+        portfolio_CAGR = (portfolio_final / portfolio_start) ** (1 / 6) - 1
+        th_positions = np.tile([1, 1], (days, 1))
         self.strategy._th_positions = th_positions
         self.assertEqual(_truncate(portfolio_CAGR, 3),
-                         _truncate(self.strategy.CAGR, 3)) 
+                         _truncate(self.strategy.CAGR, 3))
 
         del self.strategy._th_daily_returns
         del self.strategy._cum_returns
         del self.strategy._CAGR
 
-        #TODO: Only works when truncated to 2 d.p
+        # TODO: Only works when truncated to 2 d.p
         # Hedge_ratios = [[1, -0.5], [1, -0.5], ...]
-        portfolio_start = visa_start + 0.5*mastercard_start
-        portfolio_final = visa_final + 0.5*mastercard_start \
-                          + 0.5*(mastercard_start - mastercard_final)
-        portfolio_CAGR = (portfolio_final/portfolio_start)**(1/6) - 1
-        th_positions = np.tile([1,-0.5], (days, 1))
+        portfolio_start = visa_start + 0.5 * mastercard_start
+        portfolio_final = visa_final + 0.5 * mastercard_start \
+                          + 0.5 * (mastercard_start - mastercard_final)
+        portfolio_CAGR = (portfolio_final / portfolio_start) ** (1 / 6) - 1
+        th_positions = np.tile([1, -0.5], (days, 1))
         self.strategy._th_positions = th_positions
         self.assertEqual(_truncate(portfolio_CAGR, 2),
-                         _truncate(self.strategy.CAGR, 2)) 
+                         _truncate(self.strategy.CAGR, 2))
 
         del self.strategy._th_daily_returns
         del self.strategy._cum_returns
         del self.strategy._CAGR
 
-        #TODO: Doesn't work: 0.18 != 0.14 
+        # TODO: Doesn't work: 0.18 != 0.14
         # Hedge_ratios = [[-0.5, 1], [-0.5, 1], ...]
-        #portfolio_start = 0.5*visa_start + mastercard_start
-        #portfolio_final = 0.5*visa_start + mastercard_final \
+        # portfolio_start = 0.5*visa_start + mastercard_start
+        # portfolio_final = 0.5*visa_start + mastercard_final \
         #                  + 0.5*(visa_start - visa_final)
-        #portfolio_CAGR = (portfolio_final/portfolio_start)**(1/6) - 1
-        #th_positions = np.tile([-0.5,1], (days, 1))
-        #self.strategy._th_positions = th_positions
-        #self.assertEqual(_truncate(portfolio_CAGR, 2),
+        # portfolio_CAGR = (portfolio_final/portfolio_start)**(1/6) - 1
+        # th_positions = np.tile([-0.5,1], (days, 1))
+        # self.strategy._th_positions = th_positions
+        # self.assertEqual(_truncate(portfolio_CAGR, 2),
         #                 _truncate(self.strategy.CAGR, 2)) 
 
     def test_CAGR_bad_input(self):

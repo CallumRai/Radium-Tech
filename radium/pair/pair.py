@@ -284,7 +284,7 @@ class Pair:
         # Construct dataframe of closed prices
         df = pd.concat([self.equity1.closed, self.equity2.closed], axis=1)
         df.columns = [self.equity1.symbol, self.equity2.symbol]
-
+        print(df)
         # Get ols regression result for each date
         hedge_ratios = np.zeros(df.shape)
         for i in range(lookback, hedge_ratios.shape[0]):
