@@ -168,18 +168,7 @@ class PairStrategy:
             days = (end_date - start_date).days
             days = int(days)
 
-            prices = pd.concat(
-                [self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
-
-            # Calculate capital allocation to each position
-            position_values = self.th_positions * prices.values
-
-            total_positions = np.sum(np.abs(position_values), axis=1)
-            start_budget = total_positions[0]
-            total_pnl = np.nansum(self.th_daily_pnl)
-            print(total_pnl)
-
-            self._CAGR = ((start_budget+total_pnl)/start_budget)**(365/days) -1
+            self._CAGR = (1+self.cum_returns[-1])**(365/days) -1
 
         return self._CAGR
 
