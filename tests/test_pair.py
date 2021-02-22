@@ -87,7 +87,7 @@ class TestPair(unittest.TestCase):
         for hedge_ratios, spread in known_values:
             TestPair.V_MA._hedge_ratios = hedge_ratios
             self.assertEqual(spread,
-                             _truncate(TestPair.V_MA.price_spread[0], 2))
+                             _truncate(TestPair.V_MA.price_spread[-1], 2))
             del TestPair.V_MA._price_spread
 
     def test_price_spread_bad_input(self):

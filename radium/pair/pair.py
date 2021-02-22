@@ -171,8 +171,8 @@ class Pair:
             raise ValueError('Decimal places has to be >= 0.')
 
         # Get the prices at end_date
-        equity1_price = self.equity1.closed.iloc[0]
-        equity2_price = self.equity2.closed.iloc[0]
+        equity1_price = self.equity1.closed.iloc[-1]
+        equity2_price = self.equity2.closed.iloc[-1]
 
         # Calculate truncated ratios to given number of decimals 
         truncated_ratios = np.array([_truncate(n, dec) for n in hedge_ratio])
