@@ -38,7 +38,7 @@ class TestEquity(unittest.TestCase):
         Test error handling for bad key
 
         """
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             Equity('V', '2015-01-02', '2015-01-03', "")
 
         with self.assertRaises(TypeError):

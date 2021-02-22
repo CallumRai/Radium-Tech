@@ -26,8 +26,8 @@ class Equity:
             raise Exception("End date same as or before start date")
 
         # Raises error if key is empty string
-        if not isinstance(key, str) and len(key) > 0:
-            raise TypeError("Invalid API Key")
+        if len(key) == 0:
+            raise ValueError("Invalid API Key")
 
         self.symbol = symbol
         self.start_date = start_date
