@@ -58,28 +58,6 @@ class PairStrategy:
         return self._daily_returns
 
     @property
-    def th_daily_pnl(self):
-        if hasattr(self, '_th_positions') == False:
-            raise Exception('PairStrategy.th_positions is not defined')
-
-        # Calculate th_daily_pnl if undefined
-        if hasattr(self, '_th_daily_pnl') == False:
-            # Get closed prices
-            prices = pd.concat(
-                [self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
-
-            positions = pd.DataFrame(self.th_positions,
-                                     index=self.pair.equity1.data.index)
-
-            # Calculate P&L with % change of close price and positions
-            pnl = np.sum(positions.shift().values * prices.diff(),
-                         axis=1)
-            print(pnl)
-            self._th_daily_pnl = pnl
-
-        return self._th_daily_pnl
-
-    @property
     def th_daily_returns(self):
         """
         np.float[]: ndarray of daily returns 
@@ -168,18 +146,7 @@ class PairStrategy:
             days = (end_date - start_date).days
             days = int(days)
 
-            prices = pd.concat(
-                [self.pair.equity1.closed, self.pair.equity2.closed], axis=1)
-
-            # Calculate capital allocation to each position
-            position_values = self.th_positions * prices.values
-
-            total_positions = np.sum(np.abs(position_values), axis=1)
-            start_budget = total_positions[0]
-            total_pnl = np.nansum(self.th_daily_pnl)
-            print(total_pnl)
-
-            self._CAGR = ((start_budget+total_pnl)/start_budget)**(365/days) -1
+            self._CAGR = (1+self.cum_returns[-1])**(365/days) -1
 
         return self._CAGR
 
