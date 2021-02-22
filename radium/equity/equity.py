@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import requests
+from radium.helpers import _convert_date
 
 
 class Equity:
@@ -18,8 +19,8 @@ class Equity:
         """
 
         # Convert dates from strings to date objects
-        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        start_date = _convert_date(start_date)
+        end_date = _convert_date(end_date)
 
         # Raises error if date range invalid
         if end_date <= start_date:
@@ -110,12 +111,12 @@ class Equity:
         if start_date is None:
             start_date = self.start_date
         else:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            start_date = _convert_date(start_date)
 
         if end_date is None:
             end_date = self.end_date
         else:
-            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+            end_date = _convert_date(end_date)
 
         # Raises error if date range invalid
         if end_date <= start_date:
