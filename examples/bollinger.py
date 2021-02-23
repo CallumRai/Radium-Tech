@@ -7,16 +7,19 @@ from radium.strategy import BollingerPair
 API_KEY = ''
 
 # Creates equity, pair objects for visa and mastercard 2015-2021
-MRO = Equity('MRO', '2016-01-01', '2021-01-01', API_KEY)
-NAVI = Equity('NAVI', '2016-01-01', '2021-01-01', API_KEY)
+MRO = Equity('AXP', '2016-01-01', '2021-01-01', API_KEY)
+NAVI = Equity('AAL', '2016-01-01', '2021-01-01', API_KEY)
 MRO_NAVI = Pair(MRO, NAVI)
 
+# Hedge the pair
+#MRO_NAVI.hedge_ratios = ('OLS', 30)
+
 # Visualise data
-MRO_NAVI.plot_closed()
+#MRO_NAVI.plot_price_spread()
 
 # Test for cointegration
-cadf_test(MRO_NAVI)
-johansen_test(MRO_NAVI)
+#cadf_test(MRO_NAVI)
+#johansen_test(MRO_NAVI)
 
 # Backtest Bollinger band strategy on pair
 entry_z = 1
@@ -27,7 +30,7 @@ bollinger = BollingerPair(MRO_NAVI, entry_z, exit_z, lookback)
 # Evaluate strategy
 positions = bollinger.th_positions
 sharpe = bollinger.sharpe()
-ann_returns = bollinger.ann_returns()
+ann_returns = bollinger.CAGR
 
 print(f"Sharpe ratio: {sharpe}")
 print(f"Annualised returns: {ann_returns}")
