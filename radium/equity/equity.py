@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import requests
+from radium.helpers import _convert_date
 
 
 class Equity:
@@ -18,12 +19,16 @@ class Equity:
         """
 
         # Convert dates from strings to date objects
-        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        start_date = _convert_date(start_date)
+        end_date = _convert_date(end_date)
 
         # Raises error if date range invalid
         if end_date <= start_date:
             raise Exception("End date same as or before start date")
+
+        # Raises error if key is empty string
+        if len(key) == 0:
+            raise ValueError("Invalid API Key")
 
         self.symbol = symbol
         self.start_date = start_date
@@ -37,11 +42,8 @@ class Equity:
         mask = (df.index >= start_date) & (df.index <= end_date)
         df = df.loc[mask]
 
-        # Change order of dates from earliest to olders
-        df.sort_index(ascending=True, inplace=True)
-
-        # Fill missing data with previous data
-        #df.fillna(method='ffill')
+        # Sort date earliest first
+        df.sort_index(inplace=True)
 
         # Set data attribute
         self.data = df
@@ -80,7 +82,7 @@ class Equity:
                 raise TypeError("Equity Symbol does not exist")
             except KeyError:
                 # Otherwise call limit reached
-                raise RuntimeError("API key invalid or API call limit reached, try again in 1 minute.")
+                raise RuntimeError("API call limit reached, try again in 1 minute.")
 
         df = pd.DataFrame(daily_json).T
 
@@ -109,12 +111,12 @@ class Equity:
         if start_date is None:
             start_date = self.start_date
         else:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            start_date = _convert_date(start_date)
 
         if end_date is None:
             end_date = self.end_date
         else:
-            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+            end_date = _convert_date(end_date)
 
         # Raises error if date range invalid
         if end_date <= start_date:

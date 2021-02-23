@@ -6,7 +6,7 @@ import matplotlib.ticker as ticker
 import statsmodels.formula.api as sm
 
 from radium import Equity
-from radium.helpers import _truncate
+from radium.helpers import _truncate, _convert_date
 
 
 class Pair:
@@ -210,8 +210,8 @@ class Pair:
         """
 
         # Assign default values to start_date/end_date
-        start_date = self.start_date if start_date == None else start_date
-        end_date = self.end_date if end_date == None else end_date
+        start_date = self.start_date if start_date == None else _convert_date(start_date)
+        end_date = self.end_date if end_date == None else _convert_date(end_date)
 
         # Exception Handling
         if not isinstance(start_date, date):

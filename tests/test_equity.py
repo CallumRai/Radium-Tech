@@ -33,6 +33,17 @@ class TestEquity(unittest.TestCase):
         with self.assertRaises(TypeError):
             Equity('asifhj', '2015-01-02', '2015-01-05', self.API_KEY)
 
+    def test_init_bad_key(self):
+        """
+        Test error handling for bad key
+
+        """
+        with self.assertRaises(ValueError):
+            Equity('V', '2015-01-02', '2015-01-03', "")
+
+        with self.assertRaises(TypeError):
+            Equity('V', '2015-01-02', '2015-01-03', 567547)
+
     def test_plot_bad_date(self):
         """
         Test error handling of invalid date in plotting
