@@ -14,6 +14,10 @@ class PairStrategy:
     th_positions
     th_daily_returns
     cum_returns
+    CAGR
+    sharpe
+    max_drawdown
+    max_drawdown_duration
     th_annualised_returns : float
         Theoretical geometric average amount of money earned by an investment
         each year over a given time period.
@@ -112,6 +116,9 @@ class PairStrategy:
         Exception
             If self.th_positions is not defined
         """
+
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
         
         # Calculate cum_returns if undefined
         if hasattr(self, '_cum_returns') == False:
@@ -128,15 +135,18 @@ class PairStrategy:
     @property
     def CAGR(self):
         """
-        float: Compound Annual Growth Rate
+        float: Compound Annual Growth Rate.
 
-        Calculates CAGR using daily cumulative returns
+        Calculates CAGR using daily cumulative returns.
 
         Raises
         ------
         Exception
-            If self.th_positions is not defined
+            If self.th_positions is not defined.
         """
+
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
 
         #Calculate CAGR if undefined
         if hasattr(self, '_CAGR') == False:
@@ -150,29 +160,57 @@ class PairStrategy:
 
         return self._CAGR
 
+    @property
     def sharpe(self):
         """
-        Returns: Sharpe ratio
+        float: Sharpe Ratio.
 
-        """
-        ret = self.th_daily_returns
-        sharpe_ratio = np.sqrt(252) * np.mean(ret) / np.std(ret)
-        return sharpe_ratio
+        Measures the performance of an investment compared to a risk-free asset,
+        after adjusting for its risk.
 
-    def MDD(self):
+        Raises
+        ------
+        Exception
+            If self.th_positions is not defined
         """
-        Returns: Maximum drawdown
 
-        """
-        ret = self.th_returns()
-        max_drawdown = (np.min(ret) - np.max(ret)) / np.max(ret)
-        return max_drawdown
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
 
-    def MDD_duration(self):
-        """
-        Returns: Maximum drawdown duration in days
+        if hasattr(self, '_sharpe') == False:
+            ret = self.th_daily_returns
+            self._sharpe = np.sqrt(252) * np.mean(ret) / np.std(ret)
 
-        """
-        ret = self.th_returns()
-        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
-        return max_drawdown_days
+        return self._sharpe
+
+#    TODO: Research how to calculate.
+#    @property
+#    def max_drawdown(self):
+#        """
+#        float: Maximum drawdown.
+#
+#        The maximum observed loss from a peak to a trough of a portfolio, before
+#        a new peak is attained.
+#
+#        Raises
+#        ------
+#        Exception
+#            If self.th_positions is not defined
+#        """
+#
+#        if hasattr(self, '_th_positions') == False:
+#            raise Exception('PairStrategy.th_positions is not defined')
+#
+#        if hasattr(self, '_max_drawdown') == False:
+#            cum_ret = self.cum_returns
+#            max_drawdown = (np.min(cum_ret) - np.max(cum_ret)) / np.max(cum_ret)
+#            self._max_drawdown = max_drawdown
+#
+#    def MDD_duration(self):
+#        """
+#        Returns: Maximum drawdown duration in days
+#
+#        """
+#        ret = self.th_returns()
+#        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
+#        return max_drawdown_days
