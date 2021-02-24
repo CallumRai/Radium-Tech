@@ -183,29 +183,29 @@ class PairStrategy:
 
         return self._sharpe
 
-    @property
-    def max_drawdown(self):
-        """
-        float: Maximum drawdown.
-
-        The maximum observed loss from a peak to a trough of a portfolio, before
-        a new peak is attained.
-
-        Raises
-        ------
-        Exception
-            If self.th_positions is not defined
-        """
-
-        if hasattr(self, '_th_positions') == False:
-            raise Exception('PairStrategy.th_positions is not defined')
-
-        if hasattr(self, '_max_drawdown') == False:
-            cum_ret = self.cum_returns
-            max_drawdown = (np.min(cum_ret) - np.max(cum_ret)) / np.max(cum_ret)
-            self._max_drawdown = max_drawdown
-
 #    TODO: Research how to calculate.
+#    @property
+#    def max_drawdown(self):
+#        """
+#        float: Maximum drawdown.
+#
+#        The maximum observed loss from a peak to a trough of a portfolio, before
+#        a new peak is attained.
+#
+#        Raises
+#        ------
+#        Exception
+#            If self.th_positions is not defined
+#        """
+#
+#        if hasattr(self, '_th_positions') == False:
+#            raise Exception('PairStrategy.th_positions is not defined')
+#
+#        if hasattr(self, '_max_drawdown') == False:
+#            cum_ret = self.cum_returns
+#            max_drawdown = (np.min(cum_ret) - np.max(cum_ret)) / np.max(cum_ret)
+#            self._max_drawdown = max_drawdown
+#
 #    def MDD_duration(self):
 #        """
 #        Returns: Maximum drawdown duration in days
