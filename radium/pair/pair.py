@@ -265,6 +265,33 @@ class Pair:
         plt.grid()
         plt.show()
 
+    def plot_price_spread(self):
+        """
+        Plots price spread of the pair given previously calcualted hedge_ratios
+
+        Raises
+        ------
+        Exception
+            If self.hedge_ratios is not defined.
+        """
+
+        if hasattr(self, '_hedge_ratios') == False:
+            raise Exception('Pair.hedge_ratios is not defined.')
+
+        dates = self.equity1.closed.index.values
+        price_spread = self.price_spread
+
+        plt.plot(dates, price_spread)
+
+        title = f'{self.equity1.symbol} and {self.equity2.symbol} price spread'
+        plt.title(title)
+        plt.xlabel('Date')
+        plt.ylabel('Price Spread ($)')
+
+        plt.grid()
+        plt.show()
+
+
     def _hedge_ols(self, lookback):
         """
         Calculate pair hedge ratios by OLS regression. self.equity1 will be used
