@@ -14,6 +14,10 @@ class PairStrategy:
     th_positions
     th_daily_returns
     cum_returns
+    CAGR
+    sharpe
+    maximum_drawdown
+    maximum_drawdown_drawdown
     th_annualised_returns : float
         Theoretical geometric average amount of money earned by an investment
         each year over a given time period.
@@ -112,6 +116,9 @@ class PairStrategy:
         Exception
             If self.th_positions is not defined
         """
+
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
         
         # Calculate cum_returns if undefined
         if hasattr(self, '_cum_returns') == False:
@@ -128,15 +135,18 @@ class PairStrategy:
     @property
     def CAGR(self):
         """
-        float: Compound Annual Growth Rate
+        float: Compound Annual Growth Rate.
 
-        Calculates CAGR using daily cumulative returns
+        Calculates CAGR using daily cumulative returns.
 
         Raises
         ------
         Exception
-            If self.th_positions is not defined
+            If self.th_positions is not defined.
         """
+
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
 
         #Calculate CAGR if undefined
         if hasattr(self, '_CAGR') == False:
@@ -150,14 +160,28 @@ class PairStrategy:
 
         return self._CAGR
 
+    @property
     def sharpe(self):
         """
-        Returns: Sharpe ratio
+        float: Sharpe Ratio.
 
+        Measures the performance of an investment compared to a risk-free asset,
+        after adjusting for its risk.
+
+        Raises
+        ------
+        Exception
+            If self.th_positions is not defined
         """
-        ret = self.th_daily_returns
-        sharpe_ratio = np.sqrt(252) * np.mean(ret) / np.std(ret)
-        return sharpe_ratio
+
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
+
+        if hasattr(self, '_sharpe') == False:
+            ret = self.th_daily_returns
+            self._sharpe = np.sqrt(252) * np.mean(ret) / np.std(ret)
+
+        return self._sharpe
 
     def MDD(self):
         """
