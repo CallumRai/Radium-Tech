@@ -16,8 +16,8 @@ class PairStrategy:
     cum_returns
     CAGR
     sharpe
-    maximum_drawdown
-    maximum_drawdown_drawdown
+    max_drawdown
+    max_drawdown_duration
     th_annualised_returns : float
         Theoretical geometric average amount of money earned by an investment
         each year over a given time period.
@@ -183,20 +183,34 @@ class PairStrategy:
 
         return self._sharpe
 
-    def MDD(self):
+    @property
+    def max_drawdown(self):
         """
-        Returns: Maximum drawdown
+        float: Maximum drawdown.
 
-        """
-        ret = self.th_returns()
-        max_drawdown = (np.min(ret) - np.max(ret)) / np.max(ret)
-        return max_drawdown
+        The maximum observed loss from a peak to a trough of a portfolio, before
+        a new peak is attained.
 
-    def MDD_duration(self):
+        Raises
+        ------
+        Exception
+            If self.th_positions is not defined
         """
-        Returns: Maximum drawdown duration in days
 
-        """
-        ret = self.th_returns()
-        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
-        return max_drawdown_days
+        if hasattr(self, '_th_positions') == False:
+            raise Exception('PairStrategy.th_positions is not defined')
+
+        if hasattr(self, '_max_drawdown') == False:
+            cum_ret = self.cum_returns
+            max_drawdown = (np.min(cum_ret) - np.max(cum_ret)) / np.max(cum_ret)
+            self._max_drawdown = max_drawdown
+
+#    TODO: Research how to calculate.
+#    def MDD_duration(self):
+#        """
+#        Returns: Maximum drawdown duration in days
+#
+#        """
+#        ret = self.th_returns()
+#        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
+#        return max_drawdown_days
