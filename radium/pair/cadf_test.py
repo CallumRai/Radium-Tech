@@ -14,13 +14,9 @@ def cadf_test(pair):
     ----------
     pair : radium.Pair
 
-    Returns
-    -------
-    None
-
     Raises
     ------
-    TypeError:
+    TypeError
         If pair is not of type radium.Pair.
     """
 
