@@ -92,7 +92,9 @@ class Equity:
         Contains open, high, low, close, adjusted close, volume, dividend
         amount, split coefficient, for each day/
 
-        Returns ------- ret : pd.DataFrame Dataframe containing daily signal
+        Returns
+        -------
+        ret : pd.DataFrame Dataframe containing daily signal
         information with date as an index, sorted most recent first.
 
         Raises
@@ -143,10 +145,10 @@ class Equity:
 
         Parameters
         ----------
-        start_date : str or datetime or datetime.date
-            First date to plot in YYYY-MM-DD form
-        end_date : str of datetime or datetime.date
-            Last date to plot in YYYY-MM-DD form
+        start_date : (optional) str or datetime or datetime.date
+            First date to plot in YYYY-MM-DD form, defaults to equity start date
+        end_date : (optional) str of datetime or datetime.date
+            Last date to plot in YYYY-MM-DD form, defaults to equity end date
 
         Raises
         ------

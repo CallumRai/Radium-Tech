@@ -26,6 +26,12 @@ class TestPair(unittest.TestCase):
         self.assertRaises(TypeError, Pair, TestPair.visa, 'not equity')
         self.assertRaises(TypeError, Pair, 'not equity', TestPair.visa)
 
+        # Tests dates
+        visa_bad = Equity('V', '2015-01-01', '2015-02-01', self.API_KEY)
+        mastercard_bad = Equity('MA', '2016-01-01', '2016-02-01', self.API_KEY)
+        with self.assertRaises(ValueError):
+            Pair(visa_bad, mastercard_bad)
+
     def test_hedge_ratios_setter_good_input(self):
         """
         Test correctness of Pair.hedge_ratios setter method
@@ -43,21 +49,21 @@ class TestPair(unittest.TestCase):
         Test exception handling of hedge_ratios setter method
         """
 
-        with self.assertRaises(TypeError): 
+        with self.assertRaises(TypeError):
             TestPair.V_MA.hedge_ratios = 'OLS'
-        with self.assertRaises(TypeError): 
+        with self.assertRaises(TypeError):
             TestPair.V_MA.hedge_ratios = ['OLS', 30]
-        with self.assertRaises(TypeError): 
+        with self.assertRaises(TypeError):
             TestPair.V_MA.hedge_ratios = ('OLS', 30, 1)
-        with self.assertRaises(TypeError): 
+        with self.assertRaises(TypeError):
             TestPair.V_MA.hedge_ratios = (0, 30)
-        with self.assertRaises(TypeError): 
+        with self.assertRaises(TypeError):
             TestPair.V_MA.hedge_ratios = ('OLS', 30.5)
-        with self.assertRaises(ValueError): 
+        with self.assertRaises(ValueError):
             TestPair.V_MA.hedge_ratios = ('OLS', 0)
-        with self.assertRaises(ValueError): 
+        with self.assertRaises(ValueError):
             TestPair.V_MA.hedge_ratios = ('OLS', -10)
-        with self.assertRaises(ValueError): 
+        with self.assertRaises(ValueError):
             TestPair.V_MA.hedge_ratios = ('ols', 30)
 
     def test_price_spread_good_input(self):
@@ -143,8 +149,8 @@ class TestPair(unittest.TestCase):
         # Test bad hedge_ratio inputs
         self.assertRaises(ValueError, TestPair.V_MA.budget, [], 1)
         self.assertRaises(ValueError, TestPair.V_MA.budget, [1], 1)
-        self.assertRaises(ValueError, TestPair.V_MA.budget, [1,2,3], 1)
-        self.assertRaises(TypeError, TestPair.V_MA.budget, ['1','2'], 1)
+        self.assertRaises(ValueError, TestPair.V_MA.budget, [1, 2, 3], 1)
+        self.assertRaises(TypeError, TestPair.V_MA.budget, ['1', '2'], 1)
         self.assertRaises(TypeError, TestPair.V_MA.budget, 1, 1)
 
     def test_plot_closed_bad_input(self):
@@ -173,10 +179,10 @@ class TestPair(unittest.TestCase):
                           '2015-01-01')
         self.assertRaises(ValueError,
                           TestPair.V_MA.plot_closed,
-                          date(2014,1,1))
+                          date(2014, 1, 1))
         self.assertRaises(ValueError,
                           TestPair.V_MA.plot_closed,
-                          date(2022,1,1))
+                          date(2022, 1, 1))
 
 
 # Test radium.pair functions outside Pair class
@@ -199,4 +205,3 @@ class TestPairFunctions(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

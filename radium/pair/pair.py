@@ -122,16 +122,6 @@ class Pair:
         else:
             raise ValueError('Available method strings: "OLS"')
 
-    def hedge_ratios(self, method, lookback):
-
-        if not hasattr(self, "_hedge_ratios"):
-            if method == 'OLS':
-                self._hedge_ratios = self._hedge_ols(lookback)
-            else:
-                raise ValueError('Available method strings: "OLS"')
-
-        return self._hedge_ratios
-
     @property
     def price_spread(self):
         """
