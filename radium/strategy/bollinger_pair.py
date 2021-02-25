@@ -5,17 +5,32 @@ import pandas as pd
 
 
 class BollingerPair(PairStrategy):
+    """
+    Bollinger band strategy on a pair of equities
 
+    Attributes
+    ----------
+    th_positions: 2D float np.ndarray
+        Theoretical optimum positions calculated by strategy
+
+    See Also
+    --------
+    radium.PairStrategy : Parent class
+    """
     def __init__(self, pair, entry_z, exit_z, lookback):
         """
-        Bollinger band strategy on a pair of equities
-
-        Args:
-            pair: Pair to backtest strategy on
-            entry_z: Z-value to buy units
-            exit_z: Z-value to sell units
-            lookback: Number of signals to lookback on when regressing (for spread/hedge ratios)
+        Initialises strategy
+        Parameters
+        ----------
+        pair: radium.Pair
+        entry_z : float
+            Z-score to enter position at
+        exit_z: float
+            Z-score to exit position at
+        lookback: int
+            Days to lookback on when calculating optimal positions
         """
+        
         super().__init__(pair)
 
         self.entry_z = entry_z
