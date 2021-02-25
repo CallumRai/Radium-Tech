@@ -7,21 +7,21 @@ def _truncate(number, decimals=0):
 
     Parameters
     ----------
-    number: numeric
+    number : numeric
         Number to truncate
-    decimals: int
+    decimals : int
         Decimal places to truncate to, must be non-negative
 
     Returns
     -------
-    ret: numeric
+    ret : numeric
         Number truncated to specified decimal places
 
     Raises
     ------
-    TypeError:
+    TypeError
         Decimals is not an integer
-    ValueError:
+    ValueError
         Decimals is negative
     """
 

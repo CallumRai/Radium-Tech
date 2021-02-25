@@ -8,17 +8,17 @@ def _convert_date(date):
 
     Parameters
     ----------
-    date: str or datetime or datetime.date
+    date : str or datetime or datetime.date
         First date to plot in YYYY-MM-DD form
 
     Returns
     -------
-    date: datetime.date
+    date : datetime.date
         date as datetime.date type
 
     Raises
     ------
-    TypeError:
+    TypeError
         Date not of types str or datetime or datetime.date
     """
 

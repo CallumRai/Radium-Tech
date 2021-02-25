@@ -6,8 +6,9 @@ from .pair import Pair
 
 def cadf_test(pair):
     """
-    Conducts a Cointegrated Augmented Dickey Fuller Test on a pair of equities 
-    and prints t-statistic, p-value and critical values.
+    Conducts a Cointegrated Augmented Dickey Fuller Test on a pair of equities.
+
+    Prints t-statistic, p-value and critical values
 
     Parameters
     ----------
@@ -19,7 +20,7 @@ def cadf_test(pair):
 
     Raises
     ------
-    TypeError
+    TypeError:
         If pair is not of type radium.Pair.
     """
 

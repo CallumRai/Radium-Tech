@@ -13,22 +13,22 @@ class Equity:
 
         Parameters
         ----------
-        symbol: str
+        symbol : str
             Symbol for equity as found on exchange
-        start_date: str or datetime or datetime.date
+        start_date : str or datetime or datetime.date
             First date of interest in YYYY-MM-DD form
-        end_date: str of datetime or datetime.date
+        end_date : str of datetime or datetime.date
             Last date of interest in YYYY-MM-DD form
-        key: str
+        key : str
             Alpha-vantage API key
 
         Raises
         ------
-        ValueError:
+        ValueError
             API Key is invalid
             Equity symbol does not exist
             End date is same as or before start date
-        RuntimeError:
+        RuntimeError
             API Call limit reached
         """
 
@@ -76,14 +76,14 @@ class Equity:
 
         Returns
         -------
-        ret: pd.DataFrame
+        ret : pd.DataFrame
             Dataframe containing daily signal information with date as an index, sorted most recent first.
 
         Raises
         ------
-        ValueError:
+        ValueError
             Equity symbol does not exist
-        RuntimeError:
+        RuntimeError
             API Call limit reached
         """
 
@@ -124,14 +124,14 @@ class Equity:
 
         Parameters
         ----------
-        start_date: str or datetime or datetime.date
+        start_date : str or datetime or datetime.date
             First date to plot in YYYY-MM-DD form
-        end_date: str of datetime or datetime.date
+        end_date : str of datetime or datetime.date
             Last date to plot in YYYY-MM-DD form
 
         Raises
         ------
-        ValueError:
+        ValueError
             End date is same as or before start date
         """
 
