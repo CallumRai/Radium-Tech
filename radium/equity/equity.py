@@ -7,9 +7,26 @@ from radium.helpers import _convert_date
 
 
 class Equity:
+    """
+    Class for a single equity between two dates.
+
+    Attributes
+    ----------
+    data : pd.DataFrame
+        Contains all daily signals with date as index
+    high : pd.Series
+        Contains daily high prices with date as index
+    low : pd.Series
+        Contains daily low prices with date as index
+    open : pd.Series
+        Contains daily open prices with date as index
+    closed : pd.Series
+        Contains daily adjusted closed prices with date as index
+    """
+
     def __init__(self, symbol, start_date, end_date, key):
         """
-        Class for a single equity between two dates.
+        Initialises equity class
 
         Parameters
         ----------
