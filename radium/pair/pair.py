@@ -276,7 +276,7 @@ class Pair:
 
     def plot_price_spread(self):
         """
-        Plots price spread of the pair given previously calcualted hedge_ratios
+        Plots price spread of the pair given hedge_ratios
 
         Raises
         ------
@@ -303,18 +303,19 @@ class Pair:
 
     def _hedge_ols(self, lookback):
         """
-        Calculate pair hedge ratios by OLS regression. self.equity1 will be used
-        as response variable when regressing.
+        Calculate pair hedge ratios by OLS regression.
+
+        self.equity1 will be used as response variable when regressing.
 
         Parameters
         ----------
-        lookback : int > 0 
+        lookback : int
             Number of signals to lookback on when regressing.
 
         Returns 
         -------
-        hedge_ratios : np.float[][2] = [[1, -h], ...] 
-            [1, -1*(OLS gradient)] as hedge ratios (y = y1 - h*y2).
+        hedge_ratios : 2D float np.ndarray
+            Hedge ratios as [1, -1*(OLS gradient)] .
         """
 
         # Construct dataframe of closed prices
