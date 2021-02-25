@@ -41,7 +41,7 @@ class BollingerPair(PairStrategy):
 
             # Calculate long and short entry and exit points
             long_entry = spread_z < -self.entry_z
-            long_exit = spread_z > -self.entry_z
+            long_exit = spread_z > -self.exit_z
 
             short_entry = spread_z > self.entry_z
             short_exit = spread_z < self.exit_z
