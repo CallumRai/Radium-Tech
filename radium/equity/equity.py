@@ -22,6 +22,14 @@ class Equity:
         Contains daily open prices with date as index
     closed : pd.Series
         Contains daily adjusted closed prices with date as index
+    symbol : str
+        Symbol for equity as found on exchange
+    start_date : datetime.date
+        First date of interest
+    end_date : datetime.date
+        Last date of interest
+    key : str
+        Alpha-vantage API key
     """
 
     def __init__(self, symbol, start_date, end_date, key):

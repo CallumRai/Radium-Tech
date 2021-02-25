@@ -12,6 +12,13 @@ class BollingerPair(PairStrategy):
     ----------
     th_positions: 2D float np.ndarray
         Theoretical optimum positions calculated by strategy
+    pair: radium.Pair
+    entry_z : float
+        Z-score to enter position at
+    exit_z: float
+        Z-score to exit position at
+    lookback: int
+        Days looked back at on when calculating optimal positions
 
     See Also
     --------
@@ -30,7 +37,7 @@ class BollingerPair(PairStrategy):
         lookback: int
             Days to lookback on when calculating optimal positions
         """
-        
+
         super().__init__(pair)
 
         self.entry_z = entry_z

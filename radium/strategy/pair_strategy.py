@@ -26,6 +26,7 @@ class PairStrategy:
     annualised_returns : float
         Geometric average amount of money earned by an investment
         each year over a given time period.
+    pair : radium.pair
     """
 
     def __init__(self, pair):
