@@ -50,25 +50,25 @@ class PairStrategy:
     @property
     def th_positions(self):
         """
-        np.float[][2] : Theoretical unrounded number of equities long/short each
-                        day.
+        Calculates theoretical optimal positions by a specific strategy.
 
-        Will be overridden in the child class.
+        Returns
+        -------
+        ret : 2D float np.ndarray
+            Theoretical positions
         """
+
         return self._th_positions
 
     @property
     def daily_returns(self):
-        self._daily_returns = self.th_daily_returns
-
-        return self._daily_returns
-
-    @property
-    def th_daily_returns(self):
         """
-        np.float[]: ndarray of daily returns 
+        Calculates daily returns from trading by optimal positions
 
-        Calculates theoretical daily returns without budget restrains/costs.
+        Returns
+        -------
+        ret : 1D float np.ndarray
+            Daily returns
 
         Raises
         ------
@@ -109,9 +109,12 @@ class PairStrategy:
     @property
     def cum_returns(self):
         """
-        np.float[]: ndarray of daily cumulative returns of the strategy
+        Calculates daily cumulative returns from trading by optimal positions
 
-        Calculates daily cumulative returns 
+        Returns
+        -------
+        ret : 1D float np.ndarray
+            Cumulative returns
 
         Raises
         ------
@@ -137,9 +140,13 @@ class PairStrategy:
     @property
     def CAGR(self):
         """
-        float: Compound Annual Growth Rate.
+        Calculates compound annual growth rate based upon daily cumulative
+        returns
 
-        Calculates CAGR using daily cumulative returns.
+        Returns
+        -------
+        ret : float
+            Compound annual growth rate
 
         Raises
         ------
@@ -165,13 +172,16 @@ class PairStrategy:
     @property
     def sharpe(self):
         """
-        float: Sharpe Ratio.
+        Calculates the sharpe ratio for the investment.
 
         Measures the performance of an investment compared to a risk-free asset,
         after adjusting for its risk.
 
-        Raises
-        ------
+        Returns
+        -------
+        ret : float
+            Sharpe ratio
+
         Exception
             If self.th_positions is not defined
         """
@@ -185,14 +195,19 @@ class PairStrategy:
 
         return self._sharpe
 
-#    TODO: Research how to calculate.
+# TODO: Research how to calculate.
 #    @property
-#    def max_drawdown(self):
+#     def max_drawdown(self):
 #        """
-#        float: Maximum drawdown.
+#        Calculates the maximum drawdown of the investment.
 #
 #        The maximum observed loss from a peak to a trough of a portfolio, before
 #        a new peak is attained.
+#
+#        Returns
+#        -------
+#        ret : float
+#            Maximum drawdown
 #
 #        Raises
 #        ------
@@ -208,11 +223,16 @@ class PairStrategy:
 #            max_drawdown = (np.min(cum_ret) - np.max(cum_ret)) / np.max(cum_ret)
 #            self._max_drawdown = max_drawdown
 #
-#    def MDD_duration(self):
+#     def MDD_duration(self):
 #        """
-#        Returns: Maximum drawdown duration in days
+#        Calculates duration between maximum drawdown peaks in days
 #
+#        Returns
+#        -------
+#        ret : int
+#            Maximum drawdown duration
 #        """
+#
 #        ret = self.th_returns()
 #        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
 #        return max_drawdown_days
