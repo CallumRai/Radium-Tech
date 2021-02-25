@@ -10,7 +10,7 @@ class PairStrategy:
 
     Attributes
     ----------
-    th_positions : 2D float ndarray
+    th_positions : 2D float np.ndarray
         Theoretical optimum positions as defined by specific strategy.
         (Note: will be defined in child class)
     daily_returns : 1D float np.ndarray
