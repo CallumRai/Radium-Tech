@@ -68,14 +68,20 @@ class Pair:
     @property
     def hedge_ratios(self):
         """
-        np.float[][2]: ndarray of pairs of hedge ratios.
-        
+        Calculates hedge ratio of the pair
+
         Parameters
         ----------
-        params : tuple of a string and an integer
-            (method, lookback) where method is a string that determines the 
-            method of calculating hedge_ratios and lookback is an integer that 
-            determines the number of signals to lookback on.
+        params : tuple (str, int) - (method, lookback)
+            method : str
+                Method for calculating hedge ratios ('ols')
+            lookback: int
+                Number of signals to lookback on when calculating hedge ratios
+
+        Returns
+        -------
+        ret : 2D float np.ndarray
+            Hedge ratios
 
         Raises
         ------
@@ -86,10 +92,6 @@ class Pair:
         ValueError
             If lookback <= 0.
             If method isn't available.
-
-        Notes
-        -----
-        Available method strings: 'OLS'.
         """
 
         return self._hedge_ratios
@@ -125,7 +127,12 @@ class Pair:
     @property
     def price_spread(self):
         """
-        np.float[]: ndarray of price spread of equities for self.hedge_ratios.
+        Calculates price spread of the pair using the hedge ratios
+
+        Returns
+        -------
+        ret : 1D float np.ndarray
+            Price spread
 
         Raises
         ------
@@ -154,12 +161,12 @@ class Pair:
 
     def budget(self, hedge_ratio, dec):
         """
-        Returns budget needed to buy integer number of equities.
+        Calculates budget needed to buy integer number of equities.
 
         Parameters
         ----------
-        hedge_ratio : int[2]
-            Equities hedge ratio
+        hedge_ratio : 2D int np.ndarray
+            Hedge ratios of pair
         dec : int
             Number of decimals to truncate to 
 
@@ -208,25 +215,19 @@ class Pair:
 
     def plot_closed(self, start_date=None, end_date=None):
         """
-        Plots closed prices of both equities between two dates.
+        Plots closed prices of both equities between two dates as a line graph
 
         Parameters
         ----------
-        start_date : datetime.date or 'YYYY-MM-DD', default=self.start_date 
-        end_date : datetime.date or 'YYYY-MM-DD', default=self.end_date 
-
-        Returns
-        -------
-        None
+        start_date : (optional) str or datetime or datetime.date
+            First date to plot in YYYY-MM-DD form, defaults to equity start date
+        end_date : (optional) str of datetime or datetime.date
+            Last date to plot in YYYY-MM-DD form, defaults to equity end date
 
         Raises
         ------
-        TypeError
-            If start_date/end_date isn't datetime.date or correctly formated
-            string.
         ValueError
-            If end_date <= start_date.
-
+            End date is same as or before start date
         """
 
         # Assign default values to start_date/end_date
