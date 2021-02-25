@@ -5,6 +5,7 @@ import pandas as pd
 
 
 class BollingerPair(PairStrategy):
+
     def __init__(self, pair, entry_z, exit_z, lookback):
         """
         Bollinger band strategy on a pair of equities
