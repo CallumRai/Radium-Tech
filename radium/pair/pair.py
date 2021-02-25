@@ -11,6 +11,8 @@ from radium.helpers import _truncate, _convert_date
 
 class Pair:
     """
+    Class for a pair of equities.
+
     Attributes
     ----------
     hedge_ratios

@@ -89,12 +89,11 @@ class Equity:
         """
         Gets all available daily signals from an equity between two dates
 
-        Contains open, high, low, close, adjusted close, volume, dividend amount, split coefficient, for each day/
+        Contains open, high, low, close, adjusted close, volume, dividend
+        amount, split coefficient, for each day/
 
-        Returns
-        -------
-        ret : pd.DataFrame
-            Dataframe containing daily signal information with date as an index, sorted most recent first.
+        Returns ------- ret : pd.DataFrame Dataframe containing daily signal
+        information with date as an index, sorted most recent first.
 
         Raises
         ------
@@ -105,7 +104,9 @@ class Equity:
         """
 
         # Get signals in JSON form
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.symbol}&apikey={self.key}" \
+        url = f"https://www.alphavantage.co/query?function" \
+              f"=TIME_SERIES_DAILY_ADJUSTED&symbol={self.symbol}" \
+              f"&apikey={self.key}" \
               f"&outputsize=full"
         json = requests.get(url).json()
 
@@ -121,7 +122,8 @@ class Equity:
                 raise ValueError("Equity Symbol does not exist")
             except KeyError:
                 # Otherwise call limit reached
-                raise RuntimeError("API call limit reached, try again in 1 minute.")
+                raise RuntimeError(
+                    "API call limit reached, try again in 1 minute.")
 
         df = pd.DataFrame(daily_json).T
 
