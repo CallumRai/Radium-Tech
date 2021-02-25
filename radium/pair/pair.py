@@ -36,6 +36,8 @@ class Pair:
         ------
         TypeError
             If equity1 or equity2 is not of type radium.Equity.
+        ValueError
+            If equity1 and equity2 do not share any date ranges
         """
         if not isinstance(equity1, Equity):
             raise TypeError('equity1 must of type radium.Equity')
@@ -44,8 +46,24 @@ class Pair:
 
         self.equity1 = equity1
         self.equity2 = equity2
-        self.start_date = equity1.start_date
-        self.end_date = equity1.end_date
+
+        # Sets start date as latest start date of equities
+        if equity1.start_date >= equity2.start_date:
+            self.start_date = equity1.start_date
+        else:
+            self.start_date = equity2.start_date
+
+        # Sets end date as earliest end date of equities
+        if equity1.end_date <= equity2.end_date:
+            self.end_date = equity1.end_date
+        else:
+            self.end_date = equity2.end_date
+
+        # If end date is before start date then date ranges of equities is
+        # incompatible
+        if self.end_date <= self.start_date:
+            raise ValueError("There is no shared date ranges between equity1"
+                             "and equity2")
 
     @property
     def hedge_ratios(self):
@@ -103,6 +121,16 @@ class Pair:
             self._hedge_ratios = self._hedge_ols(lookback)
         else:
             raise ValueError('Available method strings: "OLS"')
+
+    def hedge_ratios(self, method, lookback):
+
+        if not hasattr(self, "_hedge_ratios"):
+            if method == 'OLS':
+                self._hedge_ratios = self._hedge_ols(lookback)
+            else:
+                raise ValueError('Available method strings: "OLS"')
+
+        return self._hedge_ratios
 
     @property
     def price_spread(self):
