@@ -230,32 +230,20 @@ class Pair:
             End date is same as or before start date
         """
 
-        # Assign default values to start_date/end_date
-        start_date = self.start_date if start_date == None else _convert_date(start_date)
-        end_date = self.end_date if end_date == None else _convert_date(end_date)
+        # If no start/end date specified use default
+        if start_date is None:
+            start_date = self.start_date
+        else:
+            start_date = _convert_date(start_date)
 
-        # Exception Handling
-        if not isinstance(start_date, date):
-            try:
-                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-            except:
-                msg = 'start_date must be datetime.date or "YYYY-MM-DD"'
-                raise TypeError(msg)
-
-        if not isinstance(end_date, date):
-            try:
-                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
-            except:
-                msg = 'end_date must be datetime.date or "YYYY-MM-DD"'
-                raise TypeError(msg)
+        if end_date is None:
+            end_date = self.end_date
+        else:
+            end_date = _convert_date(end_date)
 
         # Raises error if date range invalid
         if end_date <= start_date:
-            raise ValueError('end_date must be greater than start_date')
-        elif start_date < self.start_date:
-            raise ValueError('start_date cant be before pair.start_date')
-        elif end_date > self.end_date:
-            raise ValueError('end_date cant be before pair.end_date')
+            raise ValueError("end_date is the same as or before start_date")
 
         # Gets required range only for both equities
         equity1_closed = self.equity1.closed

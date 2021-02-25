@@ -158,20 +158,6 @@ class TestPair(unittest.TestCase):
         Test exception handling of Pair.plot_closed methods.
         """
 
-        # Wrong string formatting
-        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, '20150101')
-        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, '2015-20-01')
-        self.assertRaises(TypeError,
-                          TestPair.V_MA.plot_closed,
-                          end_date='20180101')
-        self.assertRaises(TypeError,
-                          TestPair.V_MA.plot_closed,
-                          end_date='2018-20-01')
-
-        # Wrong input type
-        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, 20150101)
-        self.assertRaises(TypeError, TestPair.V_MA.plot_closed, end_date=2015)
-
         # Wrong date ranges
         self.assertRaises(ValueError,
                           TestPair.V_MA.plot_closed,
