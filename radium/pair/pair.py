@@ -11,6 +11,8 @@ from radium.helpers import _truncate, _convert_date
 
 class Pair:
     """
+    Class for a pair of equities.
+
     Attributes
     ----------
     hedge_ratios
@@ -34,6 +36,8 @@ class Pair:
         ------
         TypeError
             If equity1 or equity2 is not of type radium.Equity.
+        ValueError
+            If equity1 and equity2 do not share any date ranges
         """
         if not isinstance(equity1, Equity):
             raise TypeError('equity1 must of type radium.Equity')
@@ -42,20 +46,42 @@ class Pair:
 
         self.equity1 = equity1
         self.equity2 = equity2
-        self.start_date = equity1.start_date
-        self.end_date = equity1.end_date
+
+        # Sets start date as latest start date of equities
+        if equity1.start_date >= equity2.start_date:
+            self.start_date = equity1.start_date
+        else:
+            self.start_date = equity2.start_date
+
+        # Sets end date as earliest end date of equities
+        if equity1.end_date <= equity2.end_date:
+            self.end_date = equity1.end_date
+        else:
+            self.end_date = equity2.end_date
+
+        # If end date is before start date then date ranges of equities is
+        # incompatible
+        if self.end_date <= self.start_date:
+            raise ValueError("There is no shared date ranges between equity1"
+                             "and equity2")
 
     @property
     def hedge_ratios(self):
         """
-        np.float[][2]: ndarray of pairs of hedge ratios.
-        
+        Calculates hedge ratio of the pair
+
         Parameters
         ----------
-        params : tuple of a string and an integer
-            (method, lookback) where method is a string that determines the 
-            method of calculating hedge_ratios and lookback is an integer that 
-            determines the number of signals to lookback on.
+        params : tuple (str, int) - (method, lookback)
+            method : str
+                Method for calculating hedge ratios ('ols')
+            lookback: int
+                Number of signals to lookback on when calculating hedge ratios
+
+        Returns
+        -------
+        ret : 2D float np.ndarray
+            Hedge ratios
 
         Raises
         ------
@@ -66,10 +92,6 @@ class Pair:
         ValueError
             If lookback <= 0.
             If method isn't available.
-
-        Notes
-        -----
-        Available method strings: 'OLS'.
         """
 
         return self._hedge_ratios
@@ -105,7 +127,12 @@ class Pair:
     @property
     def price_spread(self):
         """
-        np.float[]: ndarray of price spread of equities for self.hedge_ratios.
+        Calculates price spread of the pair using the hedge ratios
+
+        Returns
+        -------
+        ret : 1D float np.ndarray
+            Price spread
 
         Raises
         ------
@@ -134,12 +161,12 @@ class Pair:
 
     def budget(self, hedge_ratio, dec):
         """
-        Returns budget needed to buy integer number of equities.
+        Calculates budget needed to buy integer number of equities.
 
         Parameters
         ----------
-        hedge_ratio : int[2]
-            Equities hedge ratio
+        hedge_ratio : 2D int np.ndarray
+            Hedge ratios of pair
         dec : int
             Number of decimals to truncate to 
 
@@ -188,53 +215,35 @@ class Pair:
 
     def plot_closed(self, start_date=None, end_date=None):
         """
-        Plots closed prices of both equities between two dates.
+        Plots closed prices of both equities between two dates as a line graph
 
         Parameters
         ----------
-        start_date : datetime.date or 'YYYY-MM-DD', default=self.start_date 
-        end_date : datetime.date or 'YYYY-MM-DD', default=self.end_date 
-
-        Returns
-        -------
-        None
+        start_date : (optional) str or datetime or datetime.date
+            First date to plot in YYYY-MM-DD form, defaults to equity start date
+        end_date : (optional) str of datetime or datetime.date
+            Last date to plot in YYYY-MM-DD form, defaults to equity end date
 
         Raises
         ------
-        TypeError
-            If start_date/end_date isn't datetime.date or correctly formated
-            string.
         ValueError
-            If end_date <= start_date.
-
+            End date is same as or before start date
         """
 
-        # Assign default values to start_date/end_date
-        start_date = self.start_date if start_date == None else _convert_date(start_date)
-        end_date = self.end_date if end_date == None else _convert_date(end_date)
+        # If no start/end date specified use default
+        if start_date is None:
+            start_date = self.start_date
+        else:
+            start_date = _convert_date(start_date)
 
-        # Exception Handling
-        if not isinstance(start_date, date):
-            try:
-                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-            except:
-                msg = 'start_date must be datetime.date or "YYYY-MM-DD"'
-                raise TypeError(msg)
-
-        if not isinstance(end_date, date):
-            try:
-                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
-            except:
-                msg = 'end_date must be datetime.date or "YYYY-MM-DD"'
-                raise TypeError(msg)
+        if end_date is None:
+            end_date = self.end_date
+        else:
+            end_date = _convert_date(end_date)
 
         # Raises error if date range invalid
         if end_date <= start_date:
-            raise ValueError('end_date must be greater than start_date')
-        elif start_date < self.start_date:
-            raise ValueError('start_date cant be before pair.start_date')
-        elif end_date > self.end_date:
-            raise ValueError('end_date cant be before pair.end_date')
+            raise ValueError("end_date is the same as or before start_date")
 
         # Gets required range only for both equities
         equity1_closed = self.equity1.closed
@@ -267,7 +276,7 @@ class Pair:
 
     def plot_price_spread(self):
         """
-        Plots price spread of the pair given previously calcualted hedge_ratios
+        Plots price spread of the pair given hedge_ratios
 
         Raises
         ------
@@ -294,18 +303,19 @@ class Pair:
 
     def _hedge_ols(self, lookback):
         """
-        Calculate pair hedge ratios by OLS regression. self.equity1 will be used
-        as response variable when regressing.
+        Calculate pair hedge ratios by OLS regression.
+
+        self.equity1 will be used as response variable when regressing.
 
         Parameters
         ----------
-        lookback : int > 0 
+        lookback : int
             Number of signals to lookback on when regressing.
 
         Returns 
         -------
-        hedge_ratios : np.float[][2] = [[1, -h], ...] 
-            [1, -1*(OLS gradient)] as hedge ratios (y = y1 - h*y2).
+        hedge_ratios : 2D float np.ndarray
+            Hedge ratios as [1, -1*(OLS gradient)] .
         """
 
         # Construct dataframe of closed prices

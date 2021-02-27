@@ -5,16 +5,13 @@ from .pair import Pair
 
 def johansen_test(pair):
     """
-    Conducts a Johansen Test on a pair of equities and prints 
-    trace/eigenvalue statistics and critical values.
+    Conducts a Johansen Test on a pair of equities.
+
+    Print trace/eigenvalue statistics and critical values.
 
     Parameters
     ----------
     pair : radium.Pair
-
-    Returns
-    -------
-    None
 
     Raises
     ------

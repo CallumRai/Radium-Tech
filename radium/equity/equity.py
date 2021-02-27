@@ -7,15 +7,54 @@ from radium.helpers import _convert_date
 
 
 class Equity:
+    """
+    Class for a single equity between two dates.
+
+    Attributes
+    ----------
+    data : pd.DataFrame
+        Contains all daily signals with date as index
+    high : pd.Series
+        Contains daily high prices with date as index
+    low : pd.Series
+        Contains daily low prices with date as index
+    open : pd.Series
+        Contains daily open prices with date as index
+    closed : pd.Series
+        Contains daily adjusted closed prices with date as index
+    symbol : str
+        Symbol for equity as found on exchange
+    start_date : datetime.date
+        First date of interest
+    end_date : datetime.date
+        Last date of interest
+    key : str
+        Alpha-vantage API key
+    """
+
     def __init__(self, symbol, start_date, end_date, key):
         """
-        Object for single equity
+        Initialises equity class
 
-        Args:
-            symbol: Symbol of equity
-            start_date: First day of interest
-            end_date: Last day of interest
-            key: Alpha-vantage API-Key
+        Parameters
+        ----------
+        symbol : str
+            Symbol for equity as found on exchange
+        start_date : str or datetime or datetime.date
+            First date of interest in YYYY-MM-DD form
+        end_date : str of datetime or datetime.date
+            Last date of interest in YYYY-MM-DD form
+        key : str
+            Alpha-vantage API key
+
+        Raises
+        ------
+        ValueError
+            API Key is invalid
+            Equity symbol does not exist
+            End date is same as or before start date
+        RuntimeError
+            API Call limit reached
         """
 
         # Convert dates from strings to date objects
@@ -24,7 +63,7 @@ class Equity:
 
         # Raises error if date range invalid
         if end_date <= start_date:
-            raise Exception("End date same as or before start date")
+            raise ValueError("end_date is the same as or before start_date")
 
         # Raises error if key is empty string
         if len(key) == 0:
@@ -38,7 +77,7 @@ class Equity:
         # Fetch all data
         df = self._daily()
 
-        # get dates of interest only
+        # Get dates of interest only
         mask = (df.index >= start_date) & (df.index <= end_date)
         df = df.loc[mask]
 
@@ -55,34 +94,46 @@ class Equity:
         self.closed = df["5. adjusted close"]
 
     def _daily(self):
-
         """
-        Gets all available daily signals from an equity
+        Gets all available daily signals from an equity between two dates
 
-        Args:
-            equity: Equity to get data from
+        Contains open, high, low, close, adjusted close, volume, dividend
+        amount, split coefficient, for each day/
 
-        Returns: Dataframe of  daily signals
+        Returns
+        -------
+        ret : pd.DataFrame Dataframe containing daily signal
+        information with date as an index, sorted most recent first.
+
+        Raises
+        ------
+        ValueError
+            Equity symbol does not exist
+        RuntimeError
+            API Call limit reached
         """
 
         # Get signals in JSON form
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.symbol}&apikey={self.key}" \
+        url = f"https://www.alphavantage.co/query?function" \
+              f"=TIME_SERIES_DAILY_ADJUSTED&symbol={self.symbol}" \
+              f"&apikey={self.key}" \
               f"&outputsize=full"
         json = requests.get(url).json()
 
-        # Put JSON into a pandas dataframe, test for errors
+        # Extract signals
         try:
             # If correct data present place time series into list
             daily_json = json["Time Series (Daily)"]
         except KeyError:
             # Test whether an error message is recieved
             try:
-                # If error message, incorrect symbol used
+                # If error message received from API, incorrect symbol used
                 error_json = json["Error Message"]
-                raise TypeError("Equity Symbol does not exist")
+                raise ValueError("Equity Symbol does not exist")
             except KeyError:
                 # Otherwise call limit reached
-                raise RuntimeError("API call limit reached, try again in 1 minute.")
+                raise RuntimeError(
+                    "API call limit reached, try again in 1 minute.")
 
         df = pd.DataFrame(daily_json).T
 
@@ -98,15 +149,21 @@ class Equity:
 
     def plot(self, start_date=None, end_date=None):
         """
-        Plots closed prices of equity between two dates
+        Plots closed prices of equity between two dates as a line graph
 
-        Args:
-            start_date: First date to plot (default: start_date)
-            end_date: Last date to plot (default: end_date)
+        Parameters
+        ----------
+        start_date : (optional) str or datetime or datetime.date
+            First date to plot in YYYY-MM-DD form, defaults to equity start date
+        end_date : (optional) str of datetime or datetime.date
+            Last date to plot in YYYY-MM-DD form, defaults to equity end date
 
-        Returns: None
-
+        Raises
+        ------
+        ValueError
+            End date is same as or before start date
         """
+
         # If no start/end date specified use default
         if start_date is None:
             start_date = self.start_date
@@ -120,7 +177,7 @@ class Equity:
 
         # Raises error if date range invalid
         if end_date <= start_date:
-            raise Exception("End date same as or before start date")
+            raise ValueError("end_date is the same as or before start_date")
 
         # Gets required range only
         closed = self.closed

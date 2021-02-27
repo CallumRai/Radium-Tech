@@ -3,28 +3,30 @@ import pandas as pd
 
 from radium import Pair
 
+
 class PairStrategy:
     """
     Base class for equity pair trading strategies.
 
-    The th_positions properties will be defined in the child class.
-
     Attributes
     ----------
-    th_positions
-    th_daily_returns
-    cum_returns
-    CAGR
-    sharpe
-    max_drawdown
-    max_drawdown_duration
-    th_annualised_returns : float
-        Theoretical geometric average amount of money earned by an investment
+    th_positions : 2D float np.ndarray
+        Theoretical optimum positions as defined by specific strategy.
+        (Note: will be defined in child class)
+    daily_returns : 1D float np.ndarray
+    cum_returns : 1D float np.ndarray
+        Cumulative returns
+    CAGR : float
+        Compound annual growth rate
+    sharpe : float
+        Sharpe ratio
+    max_drawdown : float
+    max_drawdown_duration : int
+        Maximum drawdown duration in days
+    annualised_returns : float
+        Geometric average amount of money earned by an investment
         each year over a given time period.
-    th_sharpe_ratio : float
-    th_max_drawdown : float
-    th_max_drawdown_duration : int
-        Number of days maximum drawdown lasted.
+    pair : radium.pair
     """
 
     def __init__(self, pair):
@@ -40,6 +42,7 @@ class PairStrategy:
         TypeError
             If pair isn't radium.Pair.
         """
+
         # Exception handling
         if not isinstance(pair, Pair):
             raise TypeError('pair must be an radium.Pair object')
@@ -48,25 +51,25 @@ class PairStrategy:
     @property
     def th_positions(self):
         """
-        np.float[][2] : Theoretical unrounded number of equities long/short each
-                        day.
+        Calculates theoretical optimal positions by a specific strategy.
 
-        Will be overridden in the child class.
+        Returns
+        -------
+        ret : 2D float np.ndarray
+            Theoretical positions
         """
+
         return self._th_positions
 
     @property
     def daily_returns(self):
-        self._daily_returns = self.th_daily_returns
-
-        return self._daily_returns
-
-    @property
-    def th_daily_returns(self):
         """
-        np.float[]: ndarray of daily returns 
+        Calculates daily returns from trading by optimal positions
 
-        Calculates theoretical daily returns without budget restrains/costs.
+        Returns
+        -------
+        ret : 1D float np.ndarray
+            Daily returns
 
         Raises
         ------
@@ -100,16 +103,19 @@ class PairStrategy:
             # Calculate total position values the day before
             total_position_values = np.sum(np.abs(position_values.shift()),
                                            axis=1)
-            self._th_daily_returns = pnl / total_position_values  
+            self._th_daily_returns = pnl / total_position_values
 
         return self._th_daily_returns
 
     @property
     def cum_returns(self):
         """
-        np.float[]: ndarray of daily cumulative returns of the strategy
+        Calculates daily cumulative returns from trading by optimal positions
 
-        Calculates daily cumulative returns 
+        Returns
+        -------
+        ret : 1D float np.ndarray
+            Cumulative returns
 
         Raises
         ------
@@ -119,14 +125,14 @@ class PairStrategy:
 
         if hasattr(self, '_th_positions') == False:
             raise Exception('PairStrategy.th_positions is not defined')
-        
+
         # Calculate cum_returns if undefined
         if hasattr(self, '_cum_returns') == False:
-            #TODO: Determine 252vs365 days
-            #ret = self.daily_returns
-            #cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
-            #cum_ret.fillna(method='ffill', inplace=True)
-            #self._cum_returns = cum_ret.to_numpy()
+            # TODO: Determine 252vs365 days
+            # ret = self.daily_returns
+            # cum_ret = pd.DataFrame((np.cumprod(1 + ret) - 1))
+            # cum_ret.fillna(method='ffill', inplace=True)
+            # self._cum_returns = cum_ret.to_numpy()
 
             self._cum_returns = np.cumprod(1 + self.daily_returns) - 1
 
@@ -135,9 +141,13 @@ class PairStrategy:
     @property
     def CAGR(self):
         """
-        float: Compound Annual Growth Rate.
+        Calculates compound annual growth rate based upon daily cumulative
+        returns
 
-        Calculates CAGR using daily cumulative returns.
+        Returns
+        -------
+        ret : float
+            Compound annual growth rate
 
         Raises
         ------
@@ -148,7 +158,7 @@ class PairStrategy:
         if hasattr(self, '_th_positions') == False:
             raise Exception('PairStrategy.th_positions is not defined')
 
-        #Calculate CAGR if undefined
+        # Calculate CAGR if undefined
         if hasattr(self, '_CAGR') == False:
             start_date = self.pair.start_date
             end_date = self.pair.end_date
@@ -156,20 +166,23 @@ class PairStrategy:
             days = (end_date - start_date).days
             days = int(days)
 
-            self._CAGR = (1+self.cum_returns[-1])**(365/days) -1
+            self._CAGR = (1 + self.cum_returns[-1]) ** (365 / days) - 1
 
         return self._CAGR
 
     @property
     def sharpe(self):
         """
-        float: Sharpe Ratio.
+        Calculates the sharpe ratio for the investment.
 
         Measures the performance of an investment compared to a risk-free asset,
         after adjusting for its risk.
 
-        Raises
-        ------
+        Returns
+        -------
+        ret : float
+            Sharpe ratio
+
         Exception
             If self.th_positions is not defined
         """
@@ -183,14 +196,19 @@ class PairStrategy:
 
         return self._sharpe
 
-#    TODO: Research how to calculate.
+# TODO: Research how to calculate.
 #    @property
-#    def max_drawdown(self):
+#     def max_drawdown(self):
 #        """
-#        float: Maximum drawdown.
+#        Calculates the maximum drawdown of the investment.
 #
 #        The maximum observed loss from a peak to a trough of a portfolio, before
 #        a new peak is attained.
+#
+#        Returns
+#        -------
+#        ret : float
+#            Maximum drawdown
 #
 #        Raises
 #        ------
@@ -206,11 +224,16 @@ class PairStrategy:
 #            max_drawdown = (np.min(cum_ret) - np.max(cum_ret)) / np.max(cum_ret)
 #            self._max_drawdown = max_drawdown
 #
-#    def MDD_duration(self):
+#     def MDD_duration(self):
 #        """
-#        Returns: Maximum drawdown duration in days
+#        Calculates duration between maximum drawdown peaks in days
 #
+#        Returns
+#        -------
+#        ret : int
+#            Maximum drawdown duration
 #        """
+#
 #        ret = self.th_returns()
 #        max_drawdown_days = np.abs(np.argmax(ret) - np.argmax(min))
 #        return max_drawdown_days

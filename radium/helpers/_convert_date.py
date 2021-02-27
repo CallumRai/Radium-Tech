@@ -4,14 +4,22 @@ from datetime import datetime
 
 def _convert_date(date):
     """
-    Converts a date to a datetime date if not already
+    Converts a date to datetime.date type
+
     Parameters
     ----------
-    date: Date as a "YYYY-MM-DD" string, datetime object or datetime date
+    date : str or datetime or datetime.date
+        First date to plot in YYYY-MM-DD form
 
     Returns
     -------
-    Date as a datetime date
+    date : datetime.date
+        date as datetime.date type
+
+    Raises
+    ------
+    TypeError
+        Date not of types str or datetime or datetime.date
     """
 
     # Converts strings
@@ -24,6 +32,6 @@ def _convert_date(date):
 
     # If not in required form input is incorrect
     if not isinstance(date, datetime_date):
-        raise TypeError("Date should be a string or datetime object")
+        raise TypeError("date should be a string or datetime object")
 
     return date
