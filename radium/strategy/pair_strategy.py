@@ -10,22 +10,11 @@ class PairStrategy:
 
     Attributes
     ----------
-    th_positions : 2D float np.ndarray
-        Theoretical optimum positions as defined by specific strategy.
-        (Note: will be defined in child class)
-    daily_returns : 1D float np.ndarray
-    cum_returns : 1D float np.ndarray
-        Cumulative returns
-    CAGR : float
-        Compound annual growth rate
-    sharpe : float
-        Sharpe ratio
-    max_drawdown : float
-    max_drawdown_duration : int
-        Maximum drawdown duration in days
-    annualised_returns : float
-        Geometric average amount of money earned by an investment
-        each year over a given time period.
+    th_positions
+    daily_returns
+    cum_returns
+    CAGR 
+    sharpe
     pair : radium.pair
     """
 
@@ -51,12 +40,12 @@ class PairStrategy:
     @property
     def th_positions(self):
         """
-        Calculates theoretical optimal positions by a specific strategy.
+        np.float[][2] : Theoretical optimum positions as defined by specific
+                        strategy.
 
-        Returns
-        -------
-        ret : 2D float np.ndarray
-            Theoretical positions
+        Notes 
+        -----
+        Will be defined in child class
         """
 
         return self._th_positions
@@ -64,12 +53,7 @@ class PairStrategy:
     @property
     def daily_returns(self):
         """
-        Calculates daily returns from trading by optimal positions
-
-        Returns
-        -------
-        ret : 1D float np.ndarray
-            Daily returns
+        np.float[] : daily returns from trading by optimal positions
 
         Raises
         ------
@@ -110,12 +94,7 @@ class PairStrategy:
     @property
     def cum_returns(self):
         """
-        Calculates daily cumulative returns from trading by optimal positions
-
-        Returns
-        -------
-        ret : 1D float np.ndarray
-            Cumulative returns
+        np.float[] : daily cumulative returns from trading by optimal positions.
 
         Raises
         ------
@@ -141,13 +120,7 @@ class PairStrategy:
     @property
     def CAGR(self):
         """
-        Calculates compound annual growth rate based upon daily cumulative
-        returns
-
-        Returns
-        -------
-        ret : float
-            Compound annual growth rate
+        float: compound annual growth rate based upon daily cumulative returns.
 
         Raises
         ------
@@ -173,15 +146,10 @@ class PairStrategy:
     @property
     def sharpe(self):
         """
-        Calculates the sharpe ratio for the investment.
+        float: sharpe ratio of the strategy.
 
         Measures the performance of an investment compared to a risk-free asset,
         after adjusting for its risk.
-
-        Returns
-        -------
-        ret : float
-            Sharpe ratio
 
         Exception
             If self.th_positions is not defined

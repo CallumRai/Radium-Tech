@@ -32,39 +32,28 @@ class TestPair(unittest.TestCase):
         with self.assertRaises(ValueError):
             Pair(visa_bad, mastercard_bad)
 
-    def test_hedge_ratios_setter_good_input(self):
+    def test_hedge_good_input(self):
         """
         Test correctness of Pair.hedge_ratios setter method
         """
 
-        TestPair.V_MA.hedge_ratios = ('OLS', 30)
+        TestPair.V_MA.hedge('OLS', 30)
 
         self.assertEqual(TestPair.V_MA.hedge_ratios.shape[1], 2)
         self.assertEqual(TestPair.V_MA.hedge_ratios[-2][0], 1)
         self.assertIsInstance(TestPair.V_MA.hedge_ratios[-2][1], np.float)
         self.assertTrue(TestPair.V_MA.hedge_ratios[-2][1] < 0)
 
-    def test_hedge_ratios_setter_bad_input(self):
+    def test_hedge_bad_input(self):
         """
         Test exception handling of hedge_ratios setter method
         """
 
-        with self.assertRaises(TypeError):
-            TestPair.V_MA.hedge_ratios = 'OLS'
-        with self.assertRaises(TypeError):
-            TestPair.V_MA.hedge_ratios = ['OLS', 30]
-        with self.assertRaises(TypeError):
-            TestPair.V_MA.hedge_ratios = ('OLS', 30, 1)
-        with self.assertRaises(TypeError):
-            TestPair.V_MA.hedge_ratios = (0, 30)
-        with self.assertRaises(TypeError):
-            TestPair.V_MA.hedge_ratios = ('OLS', 30.5)
-        with self.assertRaises(ValueError):
-            TestPair.V_MA.hedge_ratios = ('OLS', 0)
-        with self.assertRaises(ValueError):
-            TestPair.V_MA.hedge_ratios = ('OLS', -10)
-        with self.assertRaises(ValueError):
-            TestPair.V_MA.hedge_ratios = ('ols', 30)
+        self.assertRaises(TypeError, self.V_MA.hedge, 0, 30)
+        self.assertRaises(TypeError, self.V_MA.hedge, 'OLS', 30.5)
+        self.assertRaises(ValueError, self.V_MA.hedge, 'OLS', 0)
+        self.assertRaises(ValueError, self.V_MA.hedge, 'OLS', -10)
+        self.assertRaises(ValueError, self.V_MA.hedge, 'ols', 30)
 
     def test_price_spread_good_input(self):
         """
@@ -91,7 +80,7 @@ class TestPair(unittest.TestCase):
                         (hedge_ratios6, -207.14))
 
         for hedge_ratios, spread in known_values:
-            TestPair.V_MA._hedge_ratios = hedge_ratios
+            TestPair.V_MA.hedge_ratios = hedge_ratios
             self.assertEqual(spread,
                              _truncate(TestPair.V_MA.price_spread[-1], 2))
             del TestPair.V_MA._price_spread
@@ -101,7 +90,7 @@ class TestPair(unittest.TestCase):
         Test exception handling of Pair.price_spread
         """
 
-        del TestPair.V_MA._hedge_ratios
+        del TestPair.V_MA.hedge_ratios
         with self.assertRaises(Exception):
             TestPair.V_MA.price_spread
 

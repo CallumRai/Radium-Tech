@@ -10,8 +10,7 @@ class BollingerPair(PairStrategy):
 
     Attributes
     ----------
-    th_positions: 2D float np.ndarray
-        Theoretical optimum positions calculated by strategy
+    th_positions
     pair: radium.Pair
     entry_z : float
         Z-score to enter position at
@@ -24,6 +23,7 @@ class BollingerPair(PairStrategy):
     --------
     radium.PairStrategy : Parent class
     """
+
     def __init__(self, pair, entry_z, exit_z, lookback):
         """
         Initialises strategy
@@ -47,9 +47,7 @@ class BollingerPair(PairStrategy):
     @property
     def th_positions(self):
         """
-        Calculates optimum positions
-
-        Returns: Positions as a 2D array
+        np.float[][2]: Theoretical optimum positions calculated by strategy
         """
 
         if hasattr(self, '_th_positions') == False:
