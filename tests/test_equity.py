@@ -30,7 +30,7 @@ class TestEquity(unittest.TestCase):
 
         """
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             Equity('asifhj', '2015-01-02', '2015-01-05', self.API_KEY)
 
     def test_init_bad_key(self):
