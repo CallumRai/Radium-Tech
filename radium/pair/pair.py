@@ -15,12 +15,13 @@ class Pair:
 
     Attributes
     ----------
-    hedge_ratios
     price_spread
     equity1 : radium.Equity
     equity2 : radium.Equity
     start_date : datetime.date
     end_date : datetime.date
+    hedge_ratios : np.float[][2]
+        ndarray of pairs of hedge ratios.
     """
 
     def __init__(self, equity1, equity2):
@@ -65,43 +66,31 @@ class Pair:
             raise ValueError("There is no shared date ranges between equity1"
                              "and equity2")
 
-    @property
-    def hedge_ratios(self):
+    def hedge(self, method, lookback):
         """
-        np.float[][2]: ndarray of pairs of hedge ratios.
+        Calculates the hedge_ratios given a method and lookback and stores it
+        in self.hedge_ratios
 
         Parameters
         ----------
-        params : tuple (str, int) - (method, lookback)
-            method : str
-                Method for calculating hedge ratios ('ols')
-            lookback: int
-                Number of signals to lookback on when calculating hedge ratios
+        method : str
+            Method for calculating hedge ratios ('ols')
+        lookback: int
+            Number of signals to lookback on when calculating hedge ratios
 
         Raises
         ------
         TypeError
-            If params isn't a tuple of length 2.
             If method isn't a string.
             If lookback isn't an integer.
         ValueError
             If lookback <= 0.
             If method isn't available.
+
+        Notes
+        -----
+        Available methods: 'OLS'
         """
-
-        return self._hedge_ratios
-
-    @hedge_ratios.setter
-    def hedge_ratios(self, params):
-
-        # Exception handling of params
-        if not isinstance(params, tuple):
-            raise TypeError('params must be a tuple')
-        elif len(params) != 2:
-            raise TypeError('params must be a tuple of length 2')
-
-        # Unpack params
-        (method, lookback) = params
 
         # Exception handling of method
         if not isinstance(method, str):
@@ -115,7 +104,7 @@ class Pair:
 
         # Calculate hedge ratios based on the method provided
         if method == 'OLS':
-            self._hedge_ratios = self._hedge_ols(lookback)
+            self.hedge_ratios = self._hedge_ols(lookback)
         else:
             raise ValueError('Available method strings: "OLS"')
 
@@ -134,7 +123,7 @@ class Pair:
         Spread calculated using y = h1*y1 + h2*y2.
         """
 
-        if hasattr(self, '_hedge_ratios') == False:
+        if hasattr(self, 'hedge_ratios') == False:
             raise Exception('Pair.hedge_ratios is not defined.')
 
         # Calculate price_spread if undefined

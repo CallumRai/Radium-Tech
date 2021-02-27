@@ -12,7 +12,7 @@ NAVI = Equity('AAL', '2016-01-01', '2021-01-01', API_KEY)
 MRO_NAVI = Pair(MRO, NAVI)
 
 # Hedge the pair
-#MRO_NAVI.hedge_ratios = ('OLS', 30)
+MRO_NAVI.hedge('OLS', 30)
 
 # Visualise data
 #MRO_NAVI.plot_price_spread()
