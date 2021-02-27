@@ -68,7 +68,7 @@ class Pair:
     @property
     def hedge_ratios(self):
         """
-        Calculates hedge ratio of the pair
+        np.float[][2]: ndarray of pairs of hedge ratios.
 
         Parameters
         ----------
@@ -77,11 +77,6 @@ class Pair:
                 Method for calculating hedge ratios ('ols')
             lookback: int
                 Number of signals to lookback on when calculating hedge ratios
-
-        Returns
-        -------
-        ret : 2D float np.ndarray
-            Hedge ratios
 
         Raises
         ------
@@ -127,12 +122,7 @@ class Pair:
     @property
     def price_spread(self):
         """
-        Calculates price spread of the pair using the hedge ratios
-
-        Returns
-        -------
-        ret : 1D float np.ndarray
-            Price spread
+        np.float[] : ndarray of price spread of equities for self.hedge_ratios
 
         Raises
         ------
@@ -165,7 +155,7 @@ class Pair:
 
         Parameters
         ----------
-        hedge_ratio : 2D int np.ndarray
+        hedge_ratio : np.int[2]
             Hedge ratios of pair
         dec : int
             Number of decimals to truncate to 
@@ -243,7 +233,11 @@ class Pair:
 
         # Raises error if date range invalid
         if end_date <= start_date:
-            raise ValueError("end_date is the same as or before start_date")
+            raise ValueError('end_date is the same as or before start_date')
+        elif start_date < self.start_date:
+            raise ValueError('start_date can\'t be before pair.start_date')
+        elif end_date > self.end_date:
+            raise ValueError('end_date can\'t be after pair.end_date')
 
         # Gets required range only for both equities
         equity1_closed = self.equity1.closed
@@ -300,7 +294,6 @@ class Pair:
         plt.grid()
         plt.show()
 
-
     def _hedge_ols(self, lookback):
         """
         Calculate pair hedge ratios by OLS regression.
@@ -314,8 +307,8 @@ class Pair:
 
         Returns 
         -------
-        hedge_ratios : 2D float np.ndarray
-            Hedge ratios as [1, -1*(OLS gradient)] .
+        hedge_ratios : np.float[][2]
+            Hedge ratios as [[1, -1*(OLS gradient)],...].
         """
 
         # Construct dataframe of closed prices
