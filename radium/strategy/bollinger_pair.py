@@ -47,7 +47,7 @@ class BollingerPair(PairStrategy):
     @property
     def th_positions(self):
         """
-        np.float[][2]: Theoretical optimum positions calculated by strategy
+        float np.ndarray[][2]: Theoretical optimum positions calculated by strategy
         """
 
         if hasattr(self, '_th_positions') == False:

@@ -40,7 +40,7 @@ class PairStrategy:
     @property
     def th_positions(self):
         """
-        np.float[][2] : Theoretical optimum positions as defined by specific
+        float np.ndarray[][2] : Theoretical optimum positions as defined by specific
                         strategy.
 
         Notes 
@@ -53,7 +53,7 @@ class PairStrategy:
     @property
     def daily_returns(self):
         """
-        np.float[] : daily returns from trading by optimal positions
+        float np.ndarray[] : daily returns from trading by optimal positions
 
         Raises
         ------
@@ -94,7 +94,7 @@ class PairStrategy:
     @property
     def cum_returns(self):
         """
-        np.float[] : daily cumulative returns from trading by optimal positions.
+        float np.ndarray[] : daily cumulative returns from trading by optimal positions.
 
         Raises
         ------

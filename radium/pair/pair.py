@@ -20,7 +20,7 @@ class Pair:
     equity2 : radium.Equity
     start_date : datetime.date
     end_date : datetime.date
-    hedge_ratios : np.float[][2]
+    hedge_ratios : float np.ndarray[][2]
         ndarray of pairs of hedge ratios.
     """
 
@@ -111,7 +111,7 @@ class Pair:
     @property
     def price_spread(self):
         """
-        np.float[] : ndarray of price spread of equities for self.hedge_ratios
+        float np.ndarray[] : ndarray of price spread of equities for self.hedge_ratios
 
         Raises
         ------
@@ -144,7 +144,7 @@ class Pair:
 
         Parameters
         ----------
-        hedge_ratio : np.int[2]
+        hedge_ratio : int np.ndarray[2]
             Hedge ratios of pair
         dec : int
             Number of decimals to truncate to 
@@ -296,7 +296,7 @@ class Pair:
 
         Returns 
         -------
-        hedge_ratios : np.float[][2]
+        hedge_ratios : float np.ndarray[][2]
             Hedge ratios as [[1, -1*(OLS gradient)],...].
         """
 
