@@ -52,7 +52,6 @@ class BollingerPair(PairStrategy):
 
         if hasattr(self, '_th_positions') == False:
             # Get pair spread using ols estimate of hedge ratio w/ lookback
-            self.pair.hedge_ratios = ('OLS', self.lookback)
             spread = self.pair.price_spread
 
             # Calculate Z-score

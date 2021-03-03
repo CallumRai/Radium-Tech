@@ -159,7 +159,7 @@ class PairStrategy:
             raise Exception('PairStrategy.th_positions is not defined')
 
         if hasattr(self, '_sharpe') == False:
-            ret = self.th_daily_returns
+            ret = self.daily_returns
             self._sharpe = np.sqrt(252) * np.mean(ret) / np.std(ret)
 
         return self._sharpe
