@@ -15,13 +15,15 @@ class Pair:
 
     Attributes
     ----------
-    price_spread
+    price_spread : float np.ndarray[]
+        Price spread of equities for self.hedge_ratios
     equity1 : radium.Equity
     equity2 : radium.Equity
     start_date : datetime.date
     end_date : datetime.date
     hedge_ratios : float np.ndarray[][2]
-        ndarray of pairs of hedge ratios.
+        Day-wise pairs of hedge ratios
+
     """
 
     def __init__(self, equity1, equity2):
@@ -111,7 +113,7 @@ class Pair:
     @property
     def price_spread(self):
         """
-        float np.ndarray[] : ndarray of price spread of equities for self.hedge_ratios
+        float np.ndarray[] : Price spread of equities for self.hedge_ratios
 
         Raises
         ------

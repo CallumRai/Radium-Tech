@@ -50,11 +50,11 @@ class BollingerPair(PairStrategy):
     def calculate_positions(self):
 
         """
-        Calculates theoretical optimum positions calculated by strategy
+        Calculates optimum positions calculated by strategy
 
         Returns
         -------
-        th_positions : np.float[][2]
+        ret : np.float[][2]
         """
 
         spread = self.pair.price_spread
