@@ -10,7 +10,6 @@ class PairStrategy:
 
     Attributes
     ----------
-    th_positions
     daily_returns
     cum_returns
     CAGR 
@@ -38,19 +37,6 @@ class PairStrategy:
         self.pair = pair
 
     @property
-    def th_positions(self):
-        """
-        float np.ndarray[][2] : Theoretical optimum positions as defined by specific
-                        strategy.
-
-        Notes 
-        -----
-        Will be defined in child class
-        """
-
-        return self._th_positions
-
-    @property
     def daily_returns(self):
         """
         float np.ndarray[] : daily returns from trading by optimal positions
@@ -61,7 +47,7 @@ class PairStrategy:
             If self.th_positions isn't defined
         """
 
-        if hasattr(self, '_th_positions') == False:
+        if hasattr(self, 'th_positions') == False:
             raise Exception('PairStrategy.th_positions is not defined')
 
         # Calculate th_daily_returns if undefined
@@ -102,7 +88,7 @@ class PairStrategy:
             If self.th_positions is not defined
         """
 
-        if hasattr(self, '_th_positions') == False:
+        if hasattr(self, 'th_positions') == False:
             raise Exception('PairStrategy.th_positions is not defined')
 
         # Calculate cum_returns if undefined
@@ -128,7 +114,7 @@ class PairStrategy:
             If self.th_positions is not defined.
         """
 
-        if hasattr(self, '_th_positions') == False:
+        if hasattr(self, 'th_positions') == False:
             raise Exception('PairStrategy.th_positions is not defined')
 
         # Calculate CAGR if undefined
@@ -155,11 +141,11 @@ class PairStrategy:
             If self.th_positions is not defined
         """
 
-        if hasattr(self, '_th_positions') == False:
+        if hasattr(self, 'th_positions') == False:
             raise Exception('PairStrategy.th_positions is not defined')
 
         if hasattr(self, '_sharpe') == False:
-            ret = self.th_daily_returns
+            ret = self.daily_returns
             self._sharpe = np.sqrt(252) * np.mean(ret) / np.std(ret)
 
         return self._sharpe
