@@ -39,7 +39,7 @@ class PairStrategy:
     @property
     def daily_returns(self):
         """
-        np.float[] : daily returns from trading by optimal positions
+        float np.ndarray[] : daily returns from trading by optimal positions
 
         Raises
         ------
@@ -80,7 +80,7 @@ class PairStrategy:
     @property
     def cum_returns(self):
         """
-        np.float[] : daily cumulative returns from trading by optimal positions.
+        float np.ndarray[] : daily cumulative returns from trading by optimal positions.
 
         Raises
         ------

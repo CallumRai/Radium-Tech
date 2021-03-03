@@ -46,7 +46,9 @@ class BollingerPair(PairStrategy):
         self.lookback = lookback
         self.th_positions = self.calculate_positions()
 
+
     def calculate_positions(self):
+
         """
         Calculates theoretical optimum positions calculated by strategy
 
