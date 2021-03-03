@@ -10,7 +10,6 @@ class BollingerPair(PairStrategy):
 
     Attributes
     ----------
-    th_positions
     pair: radium.Pair
     entry_z : float
         Z-score to enter position at
@@ -18,6 +17,8 @@ class BollingerPair(PairStrategy):
         Z-score to exit position at
     lookback: int
         Days looked back at on when calculating optimal positions
+    th_positions : np.float[][2]
+        Theoretical optimum positions calculated by strategy
 
     See Also
     --------
@@ -32,9 +33,9 @@ class BollingerPair(PairStrategy):
         pair: radium.Pair
         entry_z : float
             Z-score to enter position at
-        exit_z: float
+        exit_z : float
             Z-score to exit position at
-        lookback: int
+        lookback : int
             Days to lookback on when calculating optimal positions
         """
 
@@ -43,54 +44,58 @@ class BollingerPair(PairStrategy):
         self.entry_z = entry_z
         self.exit_z = exit_z
         self.lookback = lookback
+        self.th_positions = self.calculate_positions()
 
-    @property
-    def th_positions(self):
+    def calculate_positions(self):
         """
-        np.float[][2]: Theoretical optimum positions calculated by strategy
+        Calculates theoretical optimum positions calculated by strategy
+
+        Returns
+        -------
+        th_positions : np.float[][2]
         """
 
-        if hasattr(self, '_th_positions') == False:
-            # Get pair spread using ols estimate of hedge ratio w/ lookback
-            spread = self.pair.price_spread
+        spread = self.pair.price_spread
 
-            # Calculate Z-score
-            spread_mean = spread.rolling(self.lookback).mean()
-            spread_std = spread.rolling(self.lookback).std()
-            spread_z = (spread - spread_mean) / spread_std
+        # Calculate Z-score
+        spread_mean = spread.rolling(self.lookback).mean()
+        spread_std = spread.rolling(self.lookback).std()
+        spread_z = (spread - spread_mean) / spread_std
 
-            # Calculate long and short entry and exit points
-            long_entry = spread_z < -self.entry_z
-            long_exit = spread_z > -self.exit_z
+        # Calculate long and short entry and exit points
+        long_entry = spread_z < -self.entry_z
+        long_exit = spread_z > -self.exit_z
 
-            short_entry = spread_z > self.entry_z
-            short_exit = spread_z < self.exit_z
+        short_entry = spread_z > self.entry_z
+        short_exit = spread_z < self.exit_z
 
-            # Calculate number of units at each point
-            units_long = np.zeros(long_entry.shape)
-            units_long[:] = np.nan
+        # Calculate number of units at each point
+        units_long = np.zeros(long_entry.shape)
+        units_long[:] = np.nan
 
-            units_short = np.zeros(short_entry.shape)
-            units_short[:] = np.nan
+        units_short = np.zeros(short_entry.shape)
+        units_short[:] = np.nan
 
-            units_long[0] = 0
-            units_long[long_entry] = 1
-            units_long[long_exit] = 0
-            units_long = pd.DataFrame(data=units_long, index=self.pair.equity1.data.index, columns=["Units Long"])
-            units_long.fillna(method='ffill', inplace=True)
+        units_long[0] = 0
+        units_long[long_entry] = 1
+        units_long[long_exit] = 0
+        units_long = pd.DataFrame(data=units_long,
+                                  index=self.pair.equity1.data.index,
+                                  columns=["Units Long"])
+        units_long.fillna(method='ffill', inplace=True)
 
-            units_short[0] = 0
-            units_short[short_entry] = -1
-            units_short[short_exit] = 0
-            units_short = pd.DataFrame(data=units_short, index=self.pair.equity1.data.index, columns=["Units Short"])
-            units_short.fillna(method='ffill', inplace=True)
+        units_short[0] = 0
+        units_short[short_entry] = -1
+        units_short[short_exit] = 0
+        units_short = pd.DataFrame(data=units_short,
+                                   index=self.pair.equity1.data.index,
+                                   columns=["Units Short"])
+        units_short.fillna(method='ffill', inplace=True)
 
-            units = units_short.values + units_long.values
+        units = units_short.values + units_long.values
 
-            # Convert units into a n * 2 matrix (due to pair of equities)
-            units = np.tile(units, [1, 2])
+        # Convert units into a n * 2 matrix (due to pair of equities)
+        units = np.tile(units, [1, 2])
 
-            # Optimal share positions determined by the Bollinger Bands strategy
-            self._th_positions = units * self.pair.hedge_ratios
-
-        return self._th_positions
+        # Optimal share positions determined by the Bollinger Bands strategy
+        return units * self.pair.hedge_ratios
