@@ -10,10 +10,14 @@ class PairStrategy:
 
     Attributes
     ----------
-    daily_returns
-    cum_returns
-    CAGR 
-    sharpe
+    daily_returns : float np.ndarray[]
+        Daily returns from trading by optimal positions
+    cum_returns : float np.ndarray[]
+        Daily cumulative returns from trading by optimal positions.
+    CAGR : float
+        Compound annual growth rate based upon daily cumulative returns.
+    sharpe : float
+        Sharpe ratio of the strategy.
     pair : radium.pair
     """
 
@@ -39,7 +43,7 @@ class PairStrategy:
     @property
     def daily_returns(self):
         """
-        float np.ndarray[] : daily returns from trading by optimal positions
+        float np.ndarray[] : Daily returns from trading by optimal positions
 
         Raises
         ------
@@ -80,7 +84,7 @@ class PairStrategy:
     @property
     def cum_returns(self):
         """
-        float np.ndarray[] : daily cumulative returns from trading by optimal positions.
+        float np.ndarray[] : Daily cumulative returns from trading by optimal positions.
 
         Raises
         ------
@@ -106,7 +110,7 @@ class PairStrategy:
     @property
     def CAGR(self):
         """
-        float: compound annual growth rate based upon daily cumulative returns.
+        float: Compound annual growth rate based upon daily cumulative returns.
 
         Raises
         ------
@@ -132,7 +136,7 @@ class PairStrategy:
     @property
     def sharpe(self):
         """
-        float: sharpe ratio of the strategy.
+        float: Sharpe ratio of the strategy.
 
         Measures the performance of an investment compared to a risk-free asset,
         after adjusting for its risk.
