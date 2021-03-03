@@ -14,7 +14,7 @@ with open('requirements.txt') as f:
 # This call to setup() does all the work
 setup(
     name="Radium-Tech",
-    version="0.0.3",
+    version="0.0.4",
     description="Intuitive backtesting for quantitative trading strategies.",
     long_description=README,
     long_description_content_type="text/markdown",
