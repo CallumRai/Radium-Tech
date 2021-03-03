@@ -28,6 +28,7 @@ class BollingerPair(PairStrategy):
     def __init__(self, pair, entry_z, exit_z, lookback):
         """
         Initialises strategy
+
         Parameters
         ----------
         pair: radium.Pair
