@@ -43,35 +43,40 @@ An example full backtest cycle can be found in `Radium-Tech/Examples/bollinger.p
 
 ```sh
 from radium import Equity, Pair
-from radium.pair import johansen_test
+from radium.pair import cadf_test, johansen_test
 from radium.strategy import BollingerPair
+
 
 # Alpha-vantage API Key
 API_KEY = ''
 
 # Creates equity, pair objects for visa and mastercard 2015-2021
-visa = Equity('V', '2015-01-01', '2021-01-01', API_KEY)
-mastercard = Equity('MA', '2015-01-01', '2021-01-01', API_KEY)
-v_ma = Pair(visa, mastercard)
+equity1 = Equity('KO', '2016-01-01', '2021-01-01', API_KEY)
+equity2 = Equity('SBUX', '2016-01-01', '2021-01-01', API_KEY)
+pair = Pair(equity1, equity2)
 
 # Visualise data
-v_ma.plot()
+pair.plot_closed()
 
 # Test for cointegration
-johansen_test(v_ma)
+cadf_test(pair)
+johansen_test(pair)
+
+# Hedge the pair
+pair.hedge('OLS', 30)
 
 # Backtest Bollinger band strategy on pair
 entry_z = 1
 exit_z = 0
 lookback = 30
-v_ma_bollinger = BollingerPair(v_ma, entry_z, exit_z, lookback)
+bollinger = BollingerPair(pair, entry_z, exit_z, lookback)
 
 # Evaluate strategy
-sharpe = v_ma_bollinger.sharpe()
-ann_returns = v_ma_bollinger.ann_returns()
+CAGR = bollinger.CAGR
+sharpe = bollinger.sharpe
 
+print(f"Compound Annual Growth Rate: {CAGR}")
 print(f"Sharpe ratio: {sharpe}")
-print(f"Annualised returns: {ann_returns}")
 ```
 
 ## Authors
