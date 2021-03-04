@@ -81,4 +81,6 @@ print(f"Sharpe ratio: {sharpe}")
 
 ## Authors
 
-Radium-Tech is developed by Ivan Erlic and Callum Rai of University College London.
+Radium-Tech is developed by [Ivan Erlic](linkedin.com/in/ivan-e-665420122) and [Callum Rai](linkedin.com/in/callumrai) of University College London.
+
+Please submit any bugs/suggestions/questions to the [issues forum](https://github.com/CallumRai/Radium-Tech/issues)
