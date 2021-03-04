@@ -55,7 +55,7 @@ class BollingerPair(PairStrategy):
 
         Returns
         -------
-        ret : np.float[][2]
+        th_positions : np.float[][2]
         """
 
         spread = self.pair.price_spread
